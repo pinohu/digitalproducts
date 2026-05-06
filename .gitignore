@@ -22,5 +22,7 @@ secrets.md
 tools/.env
 tools/.venv/
 tools/__pycache__/
+tools/**/__pycache__/
+tools/.pytest_cache/
 tools/output/
 tools/*.log
