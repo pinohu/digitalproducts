@@ -1,0 +1,23 @@
+# Core
+requests>=2.31.0
+python-dotenv>=1.0.0
+pyyaml>=6.0
+click>=8.1.7
+
+# Reddit mining
+praw>=7.7.1
+
+# Anthropic API for analysis
+anthropic>=0.42.0
+
+# Google Trends
+pytrends>=4.9.2
+
+# GitHub API for committing back to repo
+PyGithub>=2.1.1
+
+# Markdown manipulation
+markdown-it-py>=3.0.0
+
+# Pretty CLI output
+rich>=13.7.0

@@ -1,0 +1,3 @@
+# Per-product templates used by product_bootstrapper.py.
+# Currently the templates are inlined as Python string-builders in the bootstrapper script
+# itself for simplicity. If templates grow more complex, extract them to .md.j2 files here.

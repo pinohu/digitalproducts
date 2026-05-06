@@ -1,55 +1,63 @@
-# Product Roadmap
+# Roadmap
 
-The 7-PDF queue. Ship in order. Don't start product N+1 until product N is live AND has a workflow attached.
+The single source of truth for what's being worked on, what's queued, and what's already shipped.
 
-## Ship Order
+---
 
-| # | Product | Slug | Price | Status | Target Ship | Notes |
+## Active Sprint
+
+| Product | Slug | Price | Status | Sprint Dates |
+|---|---|---|---|---|
+| The Good Parts of SuiteDash | `01-suitedash-good-parts` | $49 | **In progress — Day 1 of 14** | 2026-05-06 → 2026-05-20 |
+
+**Live document:** [`10-execution-sprints/current-sprint.md`](./10-execution-sprints/current-sprint.md)
+
+---
+
+## Idea Backlog
+
+The list of validated and partially-validated ideas waiting for a sprint slot. Sourced from automated mining, audience replies, competitor gaps, and lateral expansion of existing products.
+
+**Populated by:** [`01-market-research/idea-discovery/idea-backlog.md`](./01-market-research/idea-discovery/idea-backlog.md)
+
+| Slot | Status | Notes |
+|---|---|---|
+| Active Sprint | Filled | The Good Parts of SuiteDash |
+| Next sprint candidate | TBD | Selected from backlog after current sprint ships + 7-day review |
+| Backlog | Open | Pending first idea mining pass |
+
+The backlog is intentionally living. New ideas enter via `tools/idea_scorer.py` and the mining prompts in `01-market-research/idea-discovery/mining-prompts/`. Ideas exit when they get promoted to a sprint, get killed (with reason logged), or sit at <25/50 score for 90+ days (auto-archived).
+
+---
+
+## Shipped Catalog
+
+| # | Product | Slug | Launch Date | Price | Total Sales | Status |
 |---|---|---|---|---|---|---|
-| 1 | The Good Parts of SuiteDash | `01-suitedash-good-parts` | $49 | **In progress** | Day 14 from sprint start | Source: SuiteDash repo. Highest priority. |
-| 2 | TBD | `02-pdf-slot-2` | $49 | Queued | T+30 | Define after #1 ships |
-| 3 | TBD | `03-pdf-slot-3` | $49 | Queued | T+45 | Define after #1 ships |
-| 4 | TBD | `04-pdf-slot-4` | $49 | Queued | T+60 | Define after #1 ships |
-| 5 | TBD | `05-pdf-slot-5` | $49 | Queued | T+75 | Define after #1 ships |
-| 6 | TBD | `06-pdf-slot-6` | $49 | Queued | T+90 | Define after #1 ships |
-| 7 | TBD | `07-pdf-slot-7` | $49 | Queued | T+105 | Define after #1 ships |
+| _none yet_ | | | | | | |
 
-## Why Slots 2–7 Are Intentionally Blank
+When the first product ships, this table becomes the canonical view of the catalog. Bundle entries appear here too once 3+ products are live.
 
-Naming PDFs 2–7 right now is premature optimization. What customers ask for after they buy #1 — the questions in their replies, the friction points they hit, the adjacent problems they reveal — *that* is what should drive products 2–7.
+---
 
-Tiago Forte's 90-day post-launch review is the input to the next product, not a pre-built spreadsheet of guesses.
-
-## Bundling Strategy
-
-After PDFs 1–3 ship: package as **"The Dynasty Operator's Stack"** at $97 (vs. $147 unbundled). After PDFs 4–6 ship: second bundle. After all 7: portfolio bundle at $297 with a setup-call bonus.
-
-## Value Ladder Position
+## Catalog Strategy (12-Month View)
 
 ```
-Free lead magnet (newsletter signup)
-        │
-        ▼
-$49 single PDF (trust tripwire)        ← we are here
-        │
-        ▼
-$97 PDF bundle (3-pack)
-        │
-        ▼
-$297 PDF + walkthrough video bundle
-        │
-        ▼
-$997 done-with-you SuiteDash setup
-        │
-        ▼
-$2,997+ Dynasty operator cohort / community
+Months 1-3:    1-2 products live (validate avatar, price point, funnel)
+Months 4-6:    3-5 products live + first bundle
+Months 7-9:    Variations of best-performing products
+Months 10-12:  Premium tier ($297+) + DWY service ($997+)
 ```
+
+This is the realistic pace for a solo creator. See [`09-iteration-and-scale/catalog-roadmap.md`](./09-iteration-and-scale/catalog-roadmap.md) for the full plan.
+
+---
 
 ## Definition of Done (Per Product)
 
 A product is not "shipped" until **all** of these are true:
 
-- [ ] PDF finalized and uploaded to Gumroad
+- [ ] PDF / deliverable finalized and uploaded to Gumroad
 - [ ] Sales page published with all 12 sections
 - [ ] At least one bonus stacked into the offer
 - [ ] Money-back guarantee stated
@@ -59,9 +67,12 @@ A product is not "shipped" until **all** of these are true:
 - [ ] Listed on the storefront and in the sitemap
 - [ ] Linked from at least one ikeohu.com essay
 - [ ] First sale recorded
+- [ ] Entry added to the Shipped Catalog table above
+
+---
 
 ## Status Updates
 
 | Date | Update |
 |---|---|
-| 2026-05-06 | Repo scaffolded. Sprint 1 initiated for SuiteDash Good Parts. |
+| 2026-05-06 | Repo scaffolded with full framework + automation layer. Sprint 1 initiated for SuiteDash Good Parts. Idea discovery system designed; first mining pass pending. |

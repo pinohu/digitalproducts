@@ -1,0 +1,83 @@
+# tools/config.yaml — Non-secret configuration for digital products tools.
+# Secrets live in tools/.env (gitignored).
+
+repo:
+  root: ".."  # relative to tools/, points to repo root
+  default_branch: main
+  idea_backlog_path: "01-market-research/idea-discovery/idea-backlog.md"
+  products_path: "03-products"
+  validation_template: "01-market-research/niche-validation-template.md"
+
+reddit:
+  default_subreddits:
+    - SaaS
+    - Solopreneur
+    - Entrepreneur
+    - SmallBusiness
+    - indiehackers
+    - freelance
+    - sweatystartup
+    - DigitalMarketing
+  default_lookback_days: 7
+  threads_per_subreddit: 15
+  min_thread_score: 10  # Reddit upvotes — filter out low-engagement threads
+  min_thread_comments: 5  # Filter out threads with no discussion
+
+  # Pain-point patterns to flag (regex-friendly substrings)
+  signal_patterns:
+    - "i wish there was"
+    - "i wish someone would"
+    - "looking for a tool"
+    - "anyone know a tool"
+    - "best way to"
+    - "how do i"
+    - "i keep doing this manually"
+    - "spreadsheet hell"
+    - "has anyone tried"
+    - "why is there no"
+    - "i'd pay for"
+    - "would pay for"
+    - "tired of"
+    - "frustrated with"
+    - "doesn't do"
+    - "doesn't support"
+
+claude:
+  model: "claude-opus-4-7"
+  max_tokens_per_request: 4096
+  batch_size: 10  # threads per batch sent to Claude
+
+scoring:
+  decision_thresholds:
+    ship: 40
+    strong: 30
+    backlog: 25
+    weak: 15
+  # Anything below 15 = kill
+
+  # Median target — if median backlog idea > 25, recalibrate rubric
+  median_target: 22
+
+trends:
+  default_lookback_months: 24
+  growth_thresholds:
+    high: 30  # >30% over lookback = growth score 8+
+    moderate: 10  # 10-30% = growth score 6-7
+    flat: -5  # ±5% = growth score 4-5
+    declining: -15  # < -5% but > -15% = growth score 2-3, < -15% = 0-1
+
+product_bootstrap:
+  # Standard subfolders for every new product
+  product_subfolders:
+    - manuscript
+    - assets
+    - bonuses
+    - deliverables
+  # Files to create with stub content
+  per_product_files:
+    - "01-market-research/by-product/{slug}/validation.md"
+    - "02-offers/by-product/{slug}.md"
+    - "04-sales-pages/by-product/{slug}.md"
+    - "05-email-workflows/by-product/{slug}/"
+    - "06-launch-playbooks/by-product/{slug}.md"
+    - "analytics/by-product/{slug}.md"

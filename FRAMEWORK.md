@@ -2,6 +2,10 @@
 
 *Synthesized from Hormozi ($100M Offers), Justin Welsh (one-person business / Rule of One), Dan Koe, Ali Abdaal, Pat Flynn, Tiago Forte, Jenna Kutcher, and the 2026 Gumroad / Payhip / ThriveCart playbooks. Built for ship-fast PDF-first execution.*
 
+> **Canonical source:** This file is the canonical version. A mirror exists at https://docs.google.com/document/d/1mNDyqvaS20QsD3OT-VUoZILf-eOVZtlNCgkFWk2065g/edit — when the two diverge, this file wins. The Google Doc is for sharing/comments; this file is for execution.
+
+> **How this framework drives the repo:** every folder in this repo maps to one or more stages below. Stage 1 lives in `01-market-research/` (with `idea-discovery/` automating the front end). Stage 2 in `02-offers/`. Stages 3–5 in `03-products/`. Stage 6 in `08-platforms/`. Stage 7 in `07-traffic-engine/`. Stage 8 in `04-sales-pages/`. Stage 9 in `05-email-workflows/` + `06-launch-playbooks/`. Stage 10 in `09-iteration-and-scale/`. The 14-day execution sprint at the end of this doc is canonical for `10-execution-sprints/`.
+
 ---
 
 ## The Meta-Thesis

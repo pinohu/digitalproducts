@@ -17,3 +17,10 @@ SCRATCH-*.md
 *.env
 *.env.local
 secrets.md
+
+# Tools — secrets and generated output
+tools/.env
+tools/.venv/
+tools/__pycache__/
+tools/output/
+tools/*.log
