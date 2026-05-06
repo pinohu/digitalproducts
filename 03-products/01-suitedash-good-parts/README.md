@@ -1,9 +1,9 @@
 # Product 01 — The Good Parts of SuiteDash
 
-> *Status:* **In progress** — Day 1 of 14-day sprint
-> *Target ship:* T+14 from sprint start
+> *Status:* **Ready to ship** — content complete, pre-publish polish phase
+> *Target ship:* 2026-05-20 (Day 0 of 14-day launch window)
 > *Source:* SuiteDash repo (existing accumulated knowledge)
-> *Price:* $49 (trust tripwire)
+> *Price:* $49 founding (first 50 buyers / 7 days), $97 after
 > *Platform:* Gumroad
 
 ## One-Sentence Pitch
@@ -37,33 +37,41 @@ A SuiteDash subscriber who:
 
 | Folder | What Goes Here |
 |---|---|
-| `manuscript/` | Outline, drafts, final manuscript. Source of truth for the PDF. |
-| `assets/` | Cover art (1280×720 for Gumroad), hero image, social card. |
-| `bonuses/` | The 3 bonus deliverables (see Offer below). |
-| `deliverables/` | Final PDF + bonuses, packaged and ready to upload to Gumroad. |
+| `manuscript/` | Outline (`outline.md`), draft (`draft.md`). Source of truth for the PDF. |
+| `assets/` | Cover art (1280×720 for Gumroad), hero image, social card. **Pending.** |
+| `bonuses/` | The 3 bonus deliverables (markdown source — to be exported to PDF). |
+| `deliverables/` | Final PDF + bonuses, packaged for Gumroad upload. **Pending packaging.** |
 
 ## Offer Construction (Summary)
 
-Full offer construction: see `/02-offers/` and the per-product file at `/02-offers/by-product/01-suitedash-good-parts.md` (TBD).
+Full offer construction: see `/02-offers/by-product/01-suitedash-good-parts.md`.
 
 **Quick view:**
-- **Core:** ~30-page PDF — "The Good Parts of SuiteDash"
+- **Core:** ~30-page PDF — "The Good Parts of SuiteDash" (~8,000 words)
 - **Bonus 1:** The 90-Minute SuiteDash Lock-In Protocol (1-page checklist)
-- **Bonus 2:** 7 SuiteDash Automation Templates (importable JSON / config files)
+- **Bonus 2:** 7 SuiteDash Automation Recipes (recipe pack, ~2K words)
 - **Bonus 3:** The "Skip This" List — 12 features SuiteDash promotes that you should ignore
 
-**Stack value (target):** $497 / **Price:** $49 / **Ratio:** ~10x
+**Stack value:** $488 / **Price:** $49 / **Ratio:** ~10x
 
 ## Definition of Done Checklist
 
-- [ ] Manuscript final, proofread
-- [ ] Cover art designed
-- [ ] All 3 bonuses created and packaged
-- [ ] Sales page live (12 sections, see `/04-sales-pages/by-product/01-suitedash-good-parts.md`)
-- [ ] Money-back guarantee on sales page
-- [ ] Post-purchase email workflow live in Gumroad (see `/05-email-workflows/by-product/01-suitedash-good-parts/`)
-- [ ] At least 3 testimonials from beta readers
-- [ ] Abandoned cart workflow enabled
+- [x] Manuscript drafted (`manuscript/draft.md`, ~4,250 words / 30 PDF pages)
+- [x] Validation worksheet complete (`/01-market-research/by-product/01-suitedash-good-parts/validation.md` — scored 39/50)
+- [x] Offer construction complete (`/02-offers/by-product/01-suitedash-good-parts.md`)
+- [x] All 3 bonuses drafted (`bonuses/01-90-min-lock-in-protocol.md`, `bonuses/02-automation-templates.md`, `bonuses/03-skip-this-list.md`)
+- [x] Sales page drafted (`/04-sales-pages/by-product/01-suitedash-good-parts.md`)
+- [x] Money-back guarantee defined and in sales page (90-Minute Guarantee, conditional + bonus retention)
+- [x] Post-purchase email sequence drafted (6 emails in `/05-email-workflows/by-product/01-suitedash-good-parts/`)
+- [x] Launch playbook drafted with concrete dates (`/06-launch-playbooks/by-product/01-suitedash-good-parts.md`)
+- [x] Analytics scaffold ready (`/analytics/by-product/01-suitedash-good-parts.md`)
+- [ ] Manuscript proofread + final formatting pass (Day 12 sprint)
+- [ ] Bonuses packaged as PDF deliverables (markdown → PDF export)
+- [ ] Cover art designed (1280×720 for Gumroad + social cards)
+- [ ] PDF + 3 bonuses uploaded to Gumroad
+- [ ] Email sequence implemented in Gumroad Workflows (drafts written; not yet wired up)
+- [ ] Abandoned cart workflow enabled in Gumroad
+- [ ] At least 3 testimonials from beta readers collected (post-launch)
 - [ ] Linked from at least one ikeohu.com essay
 - [ ] First sale recorded
 
@@ -76,9 +84,10 @@ After ship:
 
 ## Related Files
 
-- Validation: `/01-market-research/by-product/01-suitedash-good-parts/validation.md` (TBD)
-- Offer: `/02-offers/by-product/01-suitedash-good-parts.md` (TBD)
-- Sales page: `/04-sales-pages/by-product/01-suitedash-good-parts.md` (TBD)
-- Email workflow: `/05-email-workflows/by-product/01-suitedash-good-parts/` (scaffolded)
-- Launch playbook: `/06-launch-playbooks/by-product/01-suitedash-good-parts.md` (TBD)
+- Validation: `/01-market-research/by-product/01-suitedash-good-parts/validation.md`
+- Offer: `/02-offers/by-product/01-suitedash-good-parts.md`
+- Sales page: `/04-sales-pages/by-product/01-suitedash-good-parts.md`
+- Email workflow: `/05-email-workflows/by-product/01-suitedash-good-parts/` (6 email drafts)
+- Launch playbook: `/06-launch-playbooks/by-product/01-suitedash-good-parts.md`
+- Analytics: `/analytics/by-product/01-suitedash-good-parts.md`
 - Sprint: `/10-execution-sprints/current-sprint.md`

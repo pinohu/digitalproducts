@@ -10,6 +10,7 @@ Python scripts that automate the highest-leverage parts of the digital products 
 | [`reddit_miner.py`](./reddit_miner.py) | Mine pain points from configured subreddits using PRAW | Weekly |
 | [`trends_checker.py`](./trends_checker.py) | Check Google Trends trajectory for candidate keywords | Per idea (validation phase) |
 | [`product_bootstrapper.py`](./product_bootstrapper.py) | Scaffold a new product folder with the standard structure | Per new product |
+| [`dpops.py`](./dpops.py) | Unified `dpops <subcommand>` wrapper around all four scripts | As needed |
 
 ## Setup
 
@@ -62,7 +63,11 @@ Walks you through the 5 dimensions, asks for justifications, computes the total,
 python reddit_miner.py --subreddits SaaS,Solopreneur --lookback 7
 ```
 
-Pulls top threads from configured subreddits, extracts pain-point patterns, sends to Claude API for analysis, and outputs candidate ideas in the standard format. Use `--dry-run` to skip the Claude API call and save the raw threads only.
+Pulls top threads from configured subreddits, extracts pain-point patterns, sends to Claude API for analysis, and outputs candidate ideas in the standard format.
+
+By default the markdown output lands at `01-market-research/idea-discovery/candidate-ideas/YYYY-MM-DD.md`, with a companion `.json` file at the same path. Override with `--output <path>` and `--json-output <path>`.
+
+Use `--dry-run` to skip the Claude API call and save the raw matched threads only. With `--dry-run`, no `ANTHROPIC_API_KEY` is required.
 
 ### Check trends for a candidate
 
@@ -72,6 +77,8 @@ python trends_checker.py "your candidate keyword"
 
 Returns 24-month trend data from Google Trends. Output includes growth rate, confidence level, and a recommendation that maps to Dimension 4 of the scoring rubric.
 
+The script handles Google Trends rate-limiting (HTTP 429) with exponential-backoff retries (5s, 10s, 20s, 40s by default). If pytrends still fails after `--max-retries`, the script exits with code 2 and prints `Trend data unavailable: …` so the caller can distinguish rate-limit failures from other errors.
+
 ### Bootstrap a new product folder
 
 ```bash
@@ -79,6 +86,41 @@ python product_bootstrapper.py --slug 02-newsletter-monetization --title "Newsle
 ```
 
 Creates the standard product folder structure under `03-products/` with all the right subfolders, README, and stub files for offer/sales-page/email-workflow. Slug must follow `NN-kebab-case-slug` format.
+
+The exact set of files/folders created is driven by `tools/config.yaml -> product_bootstrap.per_product_files`. Re-running against an existing slug is **idempotent**: existing files are left untouched (no clobbering), and only missing pieces are created. Use `--dry-run` to preview without writing and `--yes` to skip the confirmation prompt.
+
+### Unified CLI: `dpops.py`
+
+Instead of remembering each script's filename, you can run everything through a single entrypoint:
+
+```bash
+python tools/dpops.py score                                                  # idea_scorer.py
+python tools/dpops.py mine --subreddits SaaS,Solopreneur --dry-run           # reddit_miner.py
+python tools/dpops.py trends "newsletter monetization"                       # trends_checker.py
+python tools/dpops.py bootstrap --slug 02-newsletter-monetization \           # product_bootstrapper.py
+    --title "Newsletter Monetization Playbook"
+```
+
+All flags after the subcommand are passed through unchanged, so per-script docs still apply. `python tools/dpops.py --help` lists subcommands.
+
+### Idea scorer batch mode
+
+`idea_scorer.py --batch ideas.txt` (one idea name per line; `#` comments allowed) produces a stub backlog entry per idea — useful for quickly seeding the backlog from a brainstorm dump. Combine with `--dry-run` to preview entries without appending. The original interactive flow is unchanged.
+
+## Tests
+
+```bash
+pip install -r requirements.txt   # pytest is now in requirements
+pytest tools/tests/
+```
+
+Tests cover:
+
+- `IdeaScore.total / decision / status_bucket` and `render_backlog_entry` (no API calls — pure data).
+- `product_bootstrapper` against a `tmp_path` fake repo (verifies every per-product file/folder is created and that re-runs are idempotent).
+- `trends_checker.fetch_trends` growth-rate computation and 429 retry/backoff logic via mocked pytrends.
+
+Tests do not require any API keys or network access.
 
 ## Output Conventions
 
@@ -99,7 +141,8 @@ Every script that writes to the repo:
 | `401 Unauthorized` (Reddit) | Bad credentials | Verify `.env` matches Reddit app credentials |
 | `429 Rate Limit` (Anthropic) | Too many requests | Lower batch size in config.yaml |
 | `Permission denied` (GitHub push) | Token expired | Refresh GitHub PAT, update `.env` |
-| `Trend data unavailable` (pytrends) | Google Trends temporarily blocking | Wait 1 hour, retry; pytrends has known intermittent issues |
+| `Trend data unavailable` (pytrends) | Google Trends temporarily blocking after retries | Wait 1 hour, retry; pytrends has known intermittent issues. Exit code 2 indicates rate-limit exhaustion specifically. |
+| `Missing required env vars: ANTHROPIC_API_KEY` (reddit_miner) | `.env` missing keys for non-dry-run mining | Add key to `tools/.env` or rerun with `--dry-run` |
 
 ## Running From Flint VM
 

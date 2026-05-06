@@ -1,0 +1,314 @@
+{
+  "name": "Idea Discovery Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * MON"
+            }
+          ]
+        }
+      },
+      "id": "b6108337-a828-46f5-a15a-247e3e8313f2",
+      "name": "Cron Trigger (Mon 08:00 ET)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"subreddits\": [\"SaaS\", \"Solopreneur\", \"Entrepreneur\", \"SmallBusiness\", \"indiehackers\"],\n  \"lookback_days\": 7,\n  \"top_threads_per_sub\": 10,\n  \"min_score_threshold\": 25\n}",
+        "options": {}
+      },
+      "id": "b172b41c-49a4-4e76-953a-b40f70355a50",
+      "name": "Set Variables",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "subreddits",
+        "options": {}
+      },
+      "id": "649bbcb7-1fb2-401b-8f54-bd6a48bae12c",
+      "name": "Split Subreddits",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "id": "23243183-d165-470f-87a0-aa17d9ee4cba",
+      "name": "Loop Over Subreddits",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://www.reddit.com/r/{{$json[\"subreddits\"]}}/top.json?t=week&limit=10",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "User-Agent",
+              "value": "dynasty-empire-mining/1.0"
+            }
+          ]
+        },
+        "options": {
+          "retry": {
+            "retries": 3,
+            "waitBetweenRetries": 5000
+          }
+        }
+      },
+      "id": "bc0727c8-061b-4aa0-bc15-dbf9cb4ec4b1",
+      "name": "Reddit API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1120, 300],
+      "credentials": {
+        "oAuth2Api": {
+          "id": "REPLACE_ME",
+          "name": "Reddit OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract thread content from Reddit listing response.\n// Input: items[0].json.data.children (Reddit's standard listing format)\n// Output: one item per thread with normalized fields.\nconst threads = items[0].json.data.children;\nconst extracted = threads.map(thread => ({\n  title: thread.data.title,\n  selftext: thread.data.selftext,\n  url: `https://reddit.com${thread.data.permalink}`,\n  score: thread.data.score,\n  num_comments: thread.data.num_comments,\n  created_utc: thread.data.created_utc,\n  subreddit: thread.data.subreddit\n}));\nreturn extracted.map(t => ({ json: t }));"
+      },
+      "id": "1fa5a277-27d5-4cd3-a46a-3786c00c62ab",
+      "name": "Extract Threads",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1340, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Aggregate all threads from this subreddit batch into one payload\n// for a single Claude API call (cheaper + better cross-thread synthesis).\nconst threads = items.map(i => i.json);\nconst threads_text = threads.map(t =>\n  `### r/${t.subreddit} | score=${t.score} | ${t.num_comments} comments\\n` +\n  `Title: ${t.title}\\n` +\n  `URL: ${t.url}\\n` +\n  `Body: ${(t.selftext || '').slice(0, 2000)}\\n`\n).join('\\n---\\n');\nreturn [{ json: { threads, threads_text, count: threads.length } }];"
+      },
+      "id": "c86417fb-84e1-4c2e-9275-051420ca8a66",
+      "name": "Aggregate Threads",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1560, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"claude-opus-4-7\",\n  \"max_tokens\": 4096,\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": \"[PASTE FULL REDDIT MINING PROMPT FROM 01-market-research/idea-discovery/mining-prompts/reddit-mining.md]\\n\\nReturn JSON array of candidates with fields: idea_name, summary, evidence_url, pre_score_total, pre_score_breakdown.\\n\\nNow process the following Reddit data:\\n\\n{{ $json.threads_text }}\"\n    }\n  ]\n}",
+        "options": {
+          "retry": {
+            "retries": 3,
+            "waitBetweenRetries": 10000
+          },
+          "timeout": 120000
+        }
+      },
+      "id": "1a0c7f67-faab-4781-ac86-75195a2ea166",
+      "name": "Claude — Mining Prompt",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1780, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_ME",
+          "name": "Anthropic API (x-api-key)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Claude's response. Claude returns: { content: [{ type: 'text', text: '...' }] }\n// We expect the model to return a JSON array of candidate objects inside that text.\nconst raw = items[0].json.content?.[0]?.text || '';\nlet candidates = [];\ntry {\n  const jsonMatch = raw.match(/\\[[\\s\\S]*\\]/);\n  if (jsonMatch) {\n    candidates = JSON.parse(jsonMatch[0]);\n  }\n} catch (e) {\n  // Fail gracefully — return empty list and let downstream filter handle it.\n  candidates = [];\n}\nreturn candidates.map(c => ({ json: c }));"
+      },
+      "id": "8a7dc5dc-5231-4371-a27c-4ac8b600aa76",
+      "name": "Parse Claude Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2000, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "score-gate",
+              "leftValue": "={{ $json.pre_score_total }}",
+              "rightValue": 25,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "04e0a7e3-7967-4878-a042-7ecf2861b95a",
+      "name": "Filter By Score >= 25",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2,
+      "position": [2220, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Format each candidate as a markdown block matching idea-backlog.md.\nconst blocks = items.map((item, i) => {\n  const c = item.json;\n  const idx = i + 1;\n  const breakdown = c.pre_score_breakdown\n    ? Object.entries(c.pre_score_breakdown).map(([k, v]) => `  - ${k}: ${v}`).join('\\n')\n    : '';\n  return `## [Idea ${idx}] — ${c.idea_name}\\n\\n` +\n         `**Pre-score:** ${c.pre_score_total}/50\\n\\n` +\n         (breakdown ? `**Breakdown:**\\n${breakdown}\\n\\n` : '') +\n         `**Summary:** ${c.summary}\\n\\n` +\n         `**Evidence:** ${c.evidence_url}\\n\\n` +\n         `---\\n`;\n}).join('\\n');\nreturn [{ json: { markdown_block: blocks, count: items.length } }];"
+      },
+      "id": "a3160478-7ec6-4249-8a88-587d5cfa5f33",
+      "name": "Format Markdown Block",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2440, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.github.com/repos/pinohu/digitalproducts/contents/01-market-research/idea-discovery/idea-backlog.md",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "a81f2422-3ab3-4694-b258-1252ebb584eb",
+      "name": "GitHub — Read Backlog",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2660, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_ME",
+          "name": "GitHub PAT (Bearer)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "https://api.github.com/repos/pinohu/digitalproducts/contents/01-market-research/idea-discovery/idea-backlog.md",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"feat: add {{ $node['Format Markdown Block'].json.count }} new candidate ideas from weekly mining\",\n  \"content\": \"={{ Buffer.from(Buffer.from($node['GitHub — Read Backlog'].json.content, 'base64').toString('utf-8') + '\\n' + $node['Format Markdown Block'].json.markdown_block).toString('base64') }}\",\n  \"sha\": \"{{ $node['GitHub — Read Backlog'].json.sha }}\",\n  \"branch\": \"main\"\n}",
+        "options": {
+          "retry": {
+            "retries": 1,
+            "waitBetweenRetries": 5000
+          }
+        }
+      },
+      "id": "426bcad9-920f-49d6-a2be-d23051ec8cbc",
+      "name": "GitHub — Commit Backlog",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2880, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_ME",
+          "name": "GitHub PAT (Bearer)"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "channel": "#dynasty-mining",
+        "text": "=Mining complete. {{ $node['Format Markdown Block'].json.count }} new candidates added to idea-backlog.md.",
+        "otherOptions": {}
+      },
+      "id": "3c9a8a92-112f-4377-a13a-c21613b4b5eb",
+      "name": "Slack Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [3100, 300],
+      "credentials": {
+        "slackApi": {
+          "id": "REPLACE_ME",
+          "name": "Slack API"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Cron Trigger (Mon 08:00 ET)": {
+      "main": [[{"node": "Set Variables", "type": "main", "index": 0}]]
+    },
+    "Set Variables": {
+      "main": [[{"node": "Split Subreddits", "type": "main", "index": 0}]]
+    },
+    "Split Subreddits": {
+      "main": [[{"node": "Loop Over Subreddits", "type": "main", "index": 0}]]
+    },
+    "Loop Over Subreddits": {
+      "main": [[{"node": "Reddit API", "type": "main", "index": 0}]]
+    },
+    "Reddit API": {
+      "main": [[{"node": "Extract Threads", "type": "main", "index": 0}]]
+    },
+    "Extract Threads": {
+      "main": [[{"node": "Aggregate Threads", "type": "main", "index": 0}]]
+    },
+    "Aggregate Threads": {
+      "main": [[{"node": "Claude — Mining Prompt", "type": "main", "index": 0}]]
+    },
+    "Claude — Mining Prompt": {
+      "main": [[{"node": "Parse Claude Output", "type": "main", "index": 0}]]
+    },
+    "Parse Claude Output": {
+      "main": [[{"node": "Filter By Score >= 25", "type": "main", "index": 0}]]
+    },
+    "Filter By Score >= 25": {
+      "main": [[{"node": "Format Markdown Block", "type": "main", "index": 0}]]
+    },
+    "Format Markdown Block": {
+      "main": [[{"node": "GitHub — Read Backlog", "type": "main", "index": 0}]]
+    },
+    "GitHub — Read Backlog": {
+      "main": [[{"node": "GitHub — Commit Backlog", "type": "main", "index": 0}]]
+    },
+    "GitHub — Commit Backlog": {
+      "main": [[{"node": "Slack Notification", "type": "main", "index": 0}]]
+    }
+  },
+  "active": false,
+  "settings": {"executionOrder": "v1"},
+  "versionId": "9bd404f6-8267-4c83-9c87-ba9c9db61ace",
+  "id": "idea-discovery-pipeline",
+  "meta": {"templateCredsSetupCompleted": false},
+  "tags": []
+}

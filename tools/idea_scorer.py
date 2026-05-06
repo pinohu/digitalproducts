@@ -21,14 +21,35 @@ import textwrap
 from dataclasses import dataclass, field
 from pathlib import Path
 
-try:
+try:  # pragma: no cover
     from rich.console import Console
     from rich.panel import Panel
     from rich.prompt import Prompt, IntPrompt, Confirm
     from rich.table import Table
-except ImportError:
-    print("Missing 'rich'. Install: pip install -r requirements.txt", file=sys.stderr)
-    sys.exit(1)
+except ImportError:  # pragma: no cover
+    # Minimal stand-ins so the module is importable without rich (e.g. for
+    # unit tests of pure-data helpers like IdeaScore / render_backlog_entry).
+    class Console:  # type: ignore
+        def print(self, *args, **kwargs):
+            print(*args)
+
+    def Panel(*args, **kwargs):  # type: ignore
+        return args[0] if args else ""
+
+    class Table:  # type: ignore
+        def __init__(self, *args, **kwargs):
+            self.rows = []
+
+        def add_column(self, *a, **k): pass
+
+        def add_row(self, *a, **k): self.rows.append(a)
+
+    class _StubPrompt:  # type: ignore
+        @staticmethod
+        def ask(*a, **k):
+            raise RuntimeError("rich is not installed; interactive mode unavailable.")
+
+    Prompt = IntPrompt = Confirm = _StubPrompt  # type: ignore
 
 console = Console()
 
@@ -188,8 +209,11 @@ def score_dimension(dim: dict) -> tuple[int, str]:
     return score, justification
 
 
-def collect_idea_metadata() -> IdeaScore:
-    """Interactively collect the idea metadata before scoring."""
+def collect_idea_metadata(prefilled_name: str | None = None) -> IdeaScore:
+    """Interactively collect the idea metadata before scoring.
+
+    If `prefilled_name` is provided, the Idea-name prompt is skipped.
+    """
     console.print(
         Panel.fit(
             "[bold cyan]Dynasty Empire — Digital Product Idea Scorer[/bold cyan]\n"
@@ -199,7 +223,11 @@ def collect_idea_metadata() -> IdeaScore:
     )
     console.print()
 
-    name = Prompt.ask("[bold]Idea name[/bold] (5-8 words)")
+    if prefilled_name:
+        console.print(f"[bold]Idea name[/bold] (pre-filled): {prefilled_name}")
+        name = prefilled_name
+    else:
+        name = Prompt.ask("[bold]Idea name[/bold] (5-8 words)")
     source = Prompt.ask("[bold]Source[/bold] (URL, 'audience reply', 'AppSumo Q&A', etc.)")
     avatar = Prompt.ask(
         "[bold]Avatar[/bold] (specific — job title, revenue range, tools)\n"
@@ -331,27 +359,86 @@ def render_backlog_entry(idea: IdeaScore) -> str:
         """)
 
 
-def append_to_backlog(entry: str) -> None:
+def append_to_backlog(entry: str, backlog_path: Path = BACKLOG_PATH) -> None:
     """Append the entry to the idea-backlog.md file."""
-    if not BACKLOG_PATH.exists():
-        console.print(f"[red]Error: backlog file not found at {BACKLOG_PATH}[/red]")
+    if not backlog_path.exists():
+        console.print(f"[red]Error: backlog file not found at {backlog_path}[/red]")
         return
 
-    current = BACKLOG_PATH.read_text(encoding="utf-8")
+    current = backlog_path.read_text(encoding="utf-8")
     new_content = current.rstrip() + "\n" + entry + "\n"
-    BACKLOG_PATH.write_text(new_content, encoding="utf-8")
-    console.print(f"[green]✓ Appended to {BACKLOG_PATH.relative_to(REPO_ROOT)}[/green]")
+    backlog_path.write_text(new_content, encoding="utf-8")
+    try:
+        rel = backlog_path.relative_to(REPO_ROOT)
+    except ValueError:
+        rel = backlog_path
+    console.print(f"[green]✓ Appended to {rel}[/green]")
+
+
+def score_idea_noninteractive(name: str) -> IdeaScore:
+    """Build a minimal IdeaScore for batch mode (no prompts).
+
+    Each dimension defaults to score 0 with a placeholder justification so
+    that batch runs produce a valid backlog entry stub for later editing.
+    """
+    idea = IdeaScore(name=name, source="(batch)", avatar="(TBD)", pitch="(TBD)")
+    for dim in DIMENSIONS:
+        idea.scores[dim["key"]] = 0
+        idea.justifications[dim["key"]] = "(unscored — fill in)"
+    return idea
+
+
+def run_batch(batch_path: Path, write: bool, dry_run: bool) -> int:
+    """Process one idea per line from batch_path.
+
+    Each line becomes a stub IdeaScore; the rendered backlog entry is
+    printed and (unless --no-write or --dry-run) appended to the backlog.
+    Returns the number of ideas processed.
+    """
+    if not batch_path.exists():
+        console.print(f"[red]Batch file not found: {batch_path}[/red]")
+        return 0
+
+    lines = [
+        line.strip()
+        for line in batch_path.read_text(encoding="utf-8").splitlines()
+        if line.strip() and not line.strip().startswith("#")
+    ]
+    console.print(f"[bold]Batch mode:[/bold] {len(lines)} ideas from {batch_path}\n")
+
+    for idx, name in enumerate(lines, 1):
+        idea = score_idea_noninteractive(name)
+        entry = render_backlog_entry(idea)
+        console.print(f"\n[bold cyan]({idx}/{len(lines)}) {name}[/bold cyan]")
+        console.print(Panel(entry, border_style="dim", expand=False))
+        if dry_run:
+            continue
+        if write:
+            append_to_backlog(entry)
+    return len(lines)
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Score a digital product idea against the 50-point rubric.")
     parser.add_argument("--idea", help="Pre-fill the idea name, skip first prompt.")
     parser.add_argument("--no-write", action="store_true", help="Don't write to backlog; print only.")
+    parser.add_argument(
+        "--batch",
+        type=Path,
+        help="Path to a file with one idea name per line; produces a stub backlog entry for each.",
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Print rendered entries but do not write to the backlog (implies --no-write).",
+    )
     args = parser.parse_args()
 
-    idea = collect_idea_metadata()
-    if args.idea and not idea.name:
-        idea.name = args.idea
+    if args.batch:
+        run_batch(args.batch, write=not args.no_write, dry_run=args.dry_run)
+        return
+
+    idea = collect_idea_metadata(prefilled_name=args.idea)
 
     idea = score_idea(idea)
     show_summary(idea)
@@ -360,8 +447,9 @@ def main() -> None:
     console.print("\n[bold]Generated backlog entry:[/bold]")
     console.print(Panel(entry, border_style="dim", expand=False))
 
-    if args.no_write:
-        console.print("[yellow]--no-write set; skipping backlog write.[/yellow]")
+    if args.dry_run or args.no_write:
+        flag = "--dry-run" if args.dry_run else "--no-write"
+        console.print(f"[yellow]{flag} set; skipping backlog write.[/yellow]")
         return
 
     if Confirm.ask("\nAppend to idea-backlog.md?", default=True):

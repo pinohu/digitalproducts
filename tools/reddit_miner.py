@@ -23,23 +23,48 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import json
 import os
 import re
 import sys
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
 import yaml
 
-try:
-    import praw
-    from anthropic import Anthropic
+try:  # pragma: no cover
     from dotenv import load_dotenv
     from rich.console import Console
     from rich.progress import Progress, SpinnerColumn, TextColumn
-except ImportError as e:
-    print(f"Missing dependency: {e}. Run: pip install -r requirements.txt", file=sys.stderr)
-    sys.exit(1)
+except ImportError:  # pragma: no cover
+    def load_dotenv(*a, **k):  # type: ignore
+        return False
+
+    class Console:  # type: ignore
+        def print(self, *args, **kwargs):
+            print(*args)
+
+    class _StubProgressCtx:
+        def __init__(self, *a, **k): pass
+        def __enter__(self): return self
+        def __exit__(self, *a): return False
+        def add_task(self, *a, **k): return 0
+        def remove_task(self, *a, **k): pass
+
+    Progress = _StubProgressCtx  # type: ignore
+    SpinnerColumn = TextColumn = lambda *a, **k: None  # type: ignore
+
+# praw and anthropic are imported lazily so the module is importable for
+# tests / dry-runs even when those heavier deps aren't installed.
+try:  # pragma: no cover - optional at import time
+    import praw  # type: ignore
+except ImportError:  # pragma: no cover
+    praw = None  # type: ignore
+
+try:  # pragma: no cover
+    from anthropic import Anthropic  # type: ignore
+except ImportError:  # pragma: no cover
+    Anthropic = None  # type: ignore
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -52,6 +77,9 @@ PROMPT_PATH = (
     / "idea-discovery"
     / "mining-prompts"
     / "reddit-mining.md"
+)
+CANDIDATE_IDEAS_DIR = (
+    REPO_ROOT / "01-market-research" / "idea-discovery" / "candidate-ideas"
 )
 
 console = Console()
@@ -70,7 +98,8 @@ class Thread:
 
     @property
     def age_days(self) -> float:
-        return (dt.datetime.utcnow().timestamp() - self.created_utc) / 86400
+        now_ts = dt.datetime.now(dt.timezone.utc).timestamp()
+        return (now_ts - self.created_utc) / 86400
 
     def excerpt(self, max_len: int = 800) -> str:
         body = (self.selftext or "")[:max_len].strip()
@@ -85,17 +114,38 @@ def load_config() -> dict:
         return yaml.safe_load(f)
 
 
-def load_env() -> None:
+def load_env(required: tuple[str, ...] = ()) -> dict[str, str]:
+    """Load tools/.env if present; warn (not fatal) if missing.
+
+    If `required` is non-empty, exits with a clear message when any of those
+    keys are missing from the environment. Returns the resolved env dict.
+    """
     if ENV_PATH.exists():
         load_dotenv(ENV_PATH)
     else:
         console.print(
             f"[yellow]Warning: {ENV_PATH} not found. "
-            f"Assuming env vars are set in shell.[/yellow]"
+            f"Assuming env vars are set in shell. Copy tools/.env.example to tools/.env "
+            f"and fill in real values to silence this.[/yellow]"
         )
 
+    missing = [k for k in required if not os.getenv(k)]
+    if missing:
+        console.print(
+            f"[red]Missing required env vars: {', '.join(missing)}.[/red]\n"
+            f"Add them to {ENV_PATH} (see tools/.env.example) or export them in your shell."
+        )
+        sys.exit(1)
+    return {k: os.getenv(k, "") for k in required}
 
-def get_reddit_client() -> praw.Reddit:
+
+def get_reddit_client():
+    if praw is None:
+        console.print(
+            "[red]praw is not installed. Run: pip install -r requirements.txt[/red]"
+        )
+        sys.exit(1)
+
     client_id = os.getenv("REDDIT_CLIENT_ID")
     client_secret = os.getenv("REDDIT_CLIENT_SECRET")
     user_agent = os.getenv("REDDIT_USER_AGENT", "dynasty-empire-mining/1.0")
@@ -115,7 +165,7 @@ def get_reddit_client() -> praw.Reddit:
 
 
 def fetch_threads(
-    reddit: praw.Reddit,
+    reddit,
     subreddits: list[str],
     lookback_days: int,
     threads_per_sub: int,
@@ -123,7 +173,7 @@ def fetch_threads(
     min_comments: int,
 ) -> list[Thread]:
     threads: list[Thread] = []
-    cutoff = dt.datetime.utcnow().timestamp() - lookback_days * 86400
+    cutoff = dt.datetime.now(dt.timezone.utc).timestamp() - lookback_days * 86400
 
     with Progress(
         SpinnerColumn(),
@@ -132,11 +182,11 @@ def fetch_threads(
     ) as progress:
         for sub_name in subreddits:
             task = progress.add_task(f"Pulling r/{sub_name}...", total=None)
+            count = 0
             try:
                 sub = reddit.subreddit(sub_name)
                 # Use 'top' with time filter; week/month covers most lookback windows
                 time_filter = "week" if lookback_days <= 7 else "month"
-                count = 0
                 for post in sub.top(time_filter=time_filter, limit=threads_per_sub * 3):
                     if count >= threads_per_sub:
                         break
@@ -212,6 +262,11 @@ def call_claude(prompt: str, threads_text: str, model: str, max_tokens: int) -> 
             "Skipping Claude analysis (use --dry-run to suppress this).[/red]"
         )
         return ""
+    if Anthropic is None:
+        console.print(
+            "[red]anthropic SDK not installed. Run: pip install -r requirements.txt[/red]"
+        )
+        return ""
 
     client = Anthropic(api_key=api_key)
     full_prompt = prompt + "\n\n" + threads_text
@@ -219,11 +274,15 @@ def call_claude(prompt: str, threads_text: str, model: str, max_tokens: int) -> 
     console.print(
         f"[cyan]Calling Claude ({model}) with {len(threads_text)} chars of thread data...[/cyan]"
     )
-    response = client.messages.create(
-        model=model,
-        max_tokens=max_tokens,
-        messages=[{"role": "user", "content": full_prompt}],
-    )
+    try:
+        response = client.messages.create(
+            model=model,
+            max_tokens=max_tokens,
+            messages=[{"role": "user", "content": full_prompt}],
+        )
+    except Exception as e:
+        console.print(f"[red]Claude API error: {e}[/red]")
+        return ""
     return response.content[0].text if response.content else ""
 
 
@@ -253,12 +312,33 @@ def main() -> None:
     parser.add_argument(
         "--output",
         type=Path,
-        default=TOOLS_ROOT / "output" / f"mining-{dt.date.today().isoformat()}.md",
-        help="Output file path.",
+        default=None,
+        help=(
+            "Output markdown path. Defaults to "
+            "01-market-research/idea-discovery/candidate-ideas/YYYY-MM-DD.md"
+        ),
+    )
+    parser.add_argument(
+        "--json-output",
+        type=Path,
+        default=None,
+        help=(
+            "Optional companion JSON output path. Defaults to the markdown "
+            "output path with a .json suffix."
+        ),
     )
     args = parser.parse_args()
 
-    load_env()
+    # Resolve default output paths
+    today = dt.date.today().isoformat()
+    if args.output is None:
+        args.output = CANDIDATE_IDEAS_DIR / f"{today}.md"
+    if args.json_output is None:
+        args.json_output = args.output.with_suffix(".json")
+
+    # .env required only when we'll actually call Claude
+    required_env: tuple[str, ...] = () if args.dry_run else ("ANTHROPIC_API_KEY",)
+    load_env(required=required_env)
     config = load_config()
 
     subreddits = (
@@ -342,6 +422,22 @@ def main() -> None:
             ]
 
     write_output("\n".join(output_lines), args.output)
+
+    # Write JSON companion (always — useful for downstream tooling/tests).
+    json_payload = {
+        "generated_at": dt.datetime.now(dt.timezone.utc).isoformat(),
+        "subreddits": subreddits,
+        "lookback_days": lookback,
+        "thread_count": len(threads),
+        "matched_count": len(matched),
+        "dry_run": bool(args.dry_run),
+        "matched_threads": [asdict(t) for t in matched],
+    }
+    args.json_output.parent.mkdir(parents=True, exist_ok=True)
+    args.json_output.write_text(
+        json.dumps(json_payload, indent=2, default=str), encoding="utf-8"
+    )
+    console.print(f"[green]✓ JSON output written to {args.json_output}[/green]")
 
     console.print(
         "\n[bold green]Done.[/bold green] Review the output, then for each strong candidate run:\n"
