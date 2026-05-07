@@ -21,6 +21,8 @@ secrets.md
 # Tools — secrets and generated output
 tools/.env
 tools/.venv/
+tools/.uv-venv/
+tools/.venv.broken.*/
 tools/__pycache__/
 tools/**/__pycache__/
 tools/.pytest_cache/

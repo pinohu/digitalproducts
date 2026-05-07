@@ -11,12 +11,36 @@ Python scripts that automate the highest-leverage parts of the digital products 
 | [`trends_checker.py`](./trends_checker.py) | Check Google Trends trajectory for candidate keywords | Per idea (validation phase) |
 | [`product_bootstrapper.py`](./product_bootstrapper.py) | Scaffold a new product folder with the standard structure | Per new product |
 | [`dpops.py`](./dpops.py) | Unified `dpops <subcommand>` wrapper around all four scripts | As needed |
+| [`verify_tools.py`](./verify_tools.py) | Offline readiness check for dependencies, config, scripts, and secrets | After setup / before n8n promotion |
 
 ## Setup
 
 ### 1. Python environment
 
-Requires Python 3.10+. From the repo root:
+Requires Python 3.10+. From the repo root, use the setup script:
+
+```bash
+bash tools/setup.sh
+source tools/.venv/bin/activate
+```
+
+The script will:
+1. create `tools/.env` from `tools/.env.example` if it does not exist;
+2. create a virtual environment;
+3. install `tools/requirements.txt`;
+4. compile all scripts and run repeatable help/dry-run checks.
+
+If `python -m venv` is unavailable on WSL/Debian because `python3-venv` is missing, the script falls back to `uv` when installed. Without sudo or uv, install one of these first:
+
+```bash
+# Preferred when sudo is available
+sudo apt-get install python3-venv
+
+# Works without sudo
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+Manual equivalent:
 
 ```bash
 cd tools/
@@ -24,6 +48,8 @@ python -m venv .venv
 source .venv/bin/activate    # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
+
+See [`VERIFICATION.md`](./VERIFICATION.md) for the latest command-by-command verification notes.
 
 ### 2. API credentials
 
@@ -38,16 +64,39 @@ REDDIT_USER_AGENT=dynasty-empire-mining/1.0 by u/yourusername
 # Anthropic (https://console.anthropic.com)
 ANTHROPIC_API_KEY=sk-ant-...
 
-# GitHub (use a fine-grained PAT with contents:write on pinohu/digitalproducts)
-GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+# GitHub (future write/push automation; not required for current local tools smoke checks)
+GITHUB_TOKEN=ghp_xx...xxxx
 GITHUB_REPO=pinohu/digitalproducts
 ```
+
+Credential inventory:
+
+| Secret / Account | Used By | Required For | Notes |
+|---|---|---|---|
+| `REDDIT_CLIENT_ID` | `reddit_miner.py` | Live Reddit mining | Create a Reddit "script" app. |
+| `REDDIT_CLIENT_SECRET` | `reddit_miner.py` | Live Reddit mining | Keep only in `tools/.env` or shell env. |
+| `REDDIT_USER_AGENT` | `reddit_miner.py` | Live Reddit mining | Use an app/name + username string Reddit can identify. |
+| `ANTHROPIC_API_KEY` | `reddit_miner.py` | Claude candidate extraction | Not needed for local compile/help checks. Needed unless you are only saving raw threads. |
+| Google Trends access | `trends_checker.py` | Live trends checks | No API key, but pytrends can be blocked/rate-limited by Google. |
+| `GITHUB_TOKEN` | Future GitHub write automation | Optional today | Fine-grained PAT with repo contents write only if scripts are extended to push. |
+| n8n credentials | `automation/n8n-workflows/` | Production workflow implementation | Specs exist; actual n8n credential records must be configured in n8n. |
+| Gumroad account/API/workflows | Launch + post-purchase ops | Product publishing and email automation | Requires real account access; repo cannot verify it. |
+| Neon database URL | Analytics/automation storage if enabled | Future analytics aggregation | Requires real Neon project credentials. |
+| Vercel token/project | Landing-page deployment if enabled | Production landing page | Requires real Vercel account/project access. |
 
 ### 3. Configuration
 
 Each script reads from `tools/config.yaml` for non-secret settings (subreddits to mine, scoring thresholds, etc.). A starter config is included.
 
 ## Usage
+
+### Verify local readiness
+
+```bash
+python verify_tools.py
+```
+
+This is an offline smoke check. It verifies imports, Python compilation, config shape, expected repo paths, and which secrets are present or missing. It intentionally does not call Reddit, Google Trends, Anthropic, GitHub, Gumroad, Neon, Vercel, or n8n.
 
 ### Score an idea interactively
 
@@ -63,11 +112,7 @@ Walks you through the 5 dimensions, asks for justifications, computes the total,
 python reddit_miner.py --subreddits SaaS,Solopreneur --lookback 7
 ```
 
-Pulls top threads from configured subreddits, extracts pain-point patterns, sends to Claude API for analysis, and outputs candidate ideas in the standard format.
-
-By default the markdown output lands at `01-market-research/idea-discovery/candidate-ideas/YYYY-MM-DD.md`, with a companion `.json` file at the same path. Override with `--output <path>` and `--json-output <path>`.
-
-Use `--dry-run` to skip the Claude API call and save the raw matched threads only. With `--dry-run`, no `ANTHROPIC_API_KEY` is required.
+Pulls top threads from configured subreddits, extracts pain-point patterns, sends to Claude API for analysis, and outputs candidate ideas in the standard format. Use `--dry-run` to skip the Claude API call and save the raw threads only.
 
 ### Check trends for a candidate
 
@@ -77,8 +122,6 @@ python trends_checker.py "your candidate keyword"
 
 Returns 24-month trend data from Google Trends. Output includes growth rate, confidence level, and a recommendation that maps to Dimension 4 of the scoring rubric.
 
-The script handles Google Trends rate-limiting (HTTP 429) with exponential-backoff retries (5s, 10s, 20s, 40s by default). If pytrends still fails after `--max-retries`, the script exits with code 2 and prints `Trend data unavailable: …` so the caller can distinguish rate-limit failures from other errors.
-
 ### Bootstrap a new product folder
 
 ```bash
@@ -86,41 +129,6 @@ python product_bootstrapper.py --slug 02-newsletter-monetization --title "Newsle
 ```
 
 Creates the standard product folder structure under `03-products/` with all the right subfolders, README, and stub files for offer/sales-page/email-workflow. Slug must follow `NN-kebab-case-slug` format.
-
-The exact set of files/folders created is driven by `tools/config.yaml -> product_bootstrap.per_product_files`. Re-running against an existing slug is **idempotent**: existing files are left untouched (no clobbering), and only missing pieces are created. Use `--dry-run` to preview without writing and `--yes` to skip the confirmation prompt.
-
-### Unified CLI: `dpops.py`
-
-Instead of remembering each script's filename, you can run everything through a single entrypoint:
-
-```bash
-python tools/dpops.py score                                                  # idea_scorer.py
-python tools/dpops.py mine --subreddits SaaS,Solopreneur --dry-run           # reddit_miner.py
-python tools/dpops.py trends "newsletter monetization"                       # trends_checker.py
-python tools/dpops.py bootstrap --slug 02-newsletter-monetization \           # product_bootstrapper.py
-    --title "Newsletter Monetization Playbook"
-```
-
-All flags after the subcommand are passed through unchanged, so per-script docs still apply. `python tools/dpops.py --help` lists subcommands.
-
-### Idea scorer batch mode
-
-`idea_scorer.py --batch ideas.txt` (one idea name per line; `#` comments allowed) produces a stub backlog entry per idea — useful for quickly seeding the backlog from a brainstorm dump. Combine with `--dry-run` to preview entries without appending. The original interactive flow is unchanged.
-
-## Tests
-
-```bash
-pip install -r requirements.txt   # pytest is now in requirements
-pytest tools/tests/
-```
-
-Tests cover:
-
-- `IdeaScore.total / decision / status_bucket` and `render_backlog_entry` (no API calls — pure data).
-- `product_bootstrapper` against a `tmp_path` fake repo (verifies every per-product file/folder is created and that re-runs are idempotent).
-- `trends_checker.fetch_trends` growth-rate computation and 429 retry/backoff logic via mocked pytrends.
-
-Tests do not require any API keys or network access.
 
 ## Output Conventions
 
@@ -137,12 +145,13 @@ Every script that writes to the repo:
 
 | Failure | Cause | Fix |
 |---|---|---|
-| `ImportError: praw` | Virtualenv not activated | `source .venv/bin/activate` then re-run |
+| `ImportError: praw` / `ImportError: pytrends` | Virtualenv not activated or dependencies not installed | `source .venv/bin/activate` then `python -m pip install -r requirements.txt` |
+| `python -m venv` fails with `ensurepip is not available` | Ubuntu/WSL is missing `python3.12-venv` | Install `python3.12-venv`, or use the documented `uv` setup path |
+| `uv pip install` fails on `/mnt/c` with hardlink/rename errors | Windows-mounted filesystem does not support uv's default link behavior reliably | Re-run with `UV_LINK_MODE=copy` |
 | `401 Unauthorized` (Reddit) | Bad credentials | Verify `.env` matches Reddit app credentials |
 | `429 Rate Limit` (Anthropic) | Too many requests | Lower batch size in config.yaml |
 | `Permission denied` (GitHub push) | Token expired | Refresh GitHub PAT, update `.env` |
-| `Trend data unavailable` (pytrends) | Google Trends temporarily blocking after retries | Wait 1 hour, retry; pytrends has known intermittent issues. Exit code 2 indicates rate-limit exhaustion specifically. |
-| `Missing required env vars: ANTHROPIC_API_KEY` (reddit_miner) | `.env` missing keys for non-dry-run mining | Add key to `tools/.env` or rerun with `--dry-run` |
+| `Trend data unavailable` (pytrends) | Google Trends temporarily blocking | Wait 1 hour, retry; pytrends has known intermittent issues |
 
 ## Running From Flint VM
 

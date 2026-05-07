@@ -75,5 +75,6 @@ A product is not "shipped" until **all** of these are true:
 
 | Date | Update |
 |---|---|
+| 2026-05-07 | Automation tools repeatability improved: `tools/setup.sh` documents WSL/uv fallback, `tools/verify_tools.py` performs offline readiness checks, `tools/VERIFICATION.md` records first-pass verification, and required external credentials are inventoried for Reddit, Anthropic, n8n, Gumroad, Neon, and Vercel. |
 | 2026-05-06 | Repo scaffolded with full framework + automation layer. Sprint 1 initiated for SuiteDash Good Parts. Idea discovery system designed; first mining pass pending. |
 | 2026-05-06 | Sprint 1 content pass complete: validation, offer, manuscript (4,250 words / 8 chapters), 3 bonuses, 12-section sales page, 6-email post-purchase sequence, 14-day launch playbook, KPI tracker. Tools hardened (54 tests passing, unified `dpops.py` CLI). All 4 n8n workflows exported as importable JSON. Remaining: cover art, PDF export, beta testimonials, Gumroad upload, launch. |

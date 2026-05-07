@@ -75,12 +75,13 @@ The repo itself is the shared state. Claude updates `idea-backlog.md`, n8n watch
 |---|---|---|
 | Claude skills (specs) | ✅ Drafted | Installation requires copying to user skills folder |
 | n8n workflow specs | ✅ Drafted | Implementation requires building in n8n.audreysplace.place |
-| Python tools | ✅ Drafted | See `/tools/README.md` for setup |
+| Python tools | ✅ Runnable local stack documented | `tools/setup.sh` installs deps; `tools/verify_tools.py` checks imports/config/secrets offline; live Reddit/Trends runs still need credentials/network |
 | Flint delegation patterns | ✅ Drafted | See `flint-delegation.md` |
 
 ## What's Pending (User Action)
 
 - [ ] Install Claude skills to user skill directory (see each skill's installation note)
 - [ ] Build n8n workflows from specs (each spec includes node-by-node instructions)
-- [ ] Set up Python virtualenv + API keys per `tools/README.md`
+- [ ] Set up Python virtualenv + real API keys per `tools/README.md`; run `python tools/verify_tools.py` from an activated environment
 - [ ] Wire Flint VM to handle the Reddit miner cron schedule
+- [ ] Add real external credentials before production writes: Reddit app, Anthropic API key, n8n credentials, Gumroad access, Neon database URL if used, and Vercel project/token if deploying landing pages
