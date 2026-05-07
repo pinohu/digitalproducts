@@ -79,6 +79,19 @@ class TrendsUnavailableError(RuntimeError):
     """Raised when Google Trends data cannot be fetched after retries."""
 
 
+class MissingDependencyError(RuntimeError):
+    """Raised when a required CLI dependency (e.g. pytrends) isn't installed."""
+
+
+def _default_trend_req_factory():
+    if TrendReq is None:
+        raise MissingDependencyError(
+            "pytrends is not installed. Install with: "
+            "pip install -r tools/requirements.txt"
+        )
+    return TrendReq(hl="en-US", tz=360)
+
+
 def _is_rate_limit(exc: Exception) -> bool:
     """Detect pytrends/requests 429-style failures across SDK versions."""
     msg = str(exc).lower()
@@ -105,7 +118,7 @@ def fetch_trends(
     Retries with exponential backoff on rate-limit (429) responses. Raises
     `TrendsUnavailableError` if pytrends keeps failing after the retry budget.
     """
-    factory = trend_req_factory or (lambda: TrendReq(hl="en-US", tz=360))
+    factory = trend_req_factory or _default_trend_req_factory
     timeframe = f"today {lookback_months}-m"
 
     console.print(
@@ -121,6 +134,9 @@ def fetch_trends(
             pytrends.build_payload(keywords, timeframe=timeframe, geo=geo)
             interest = pytrends.interest_over_time()
             break
+        except MissingDependencyError:
+            # Not retryable; surface as a setup error, not a transient outage.
+            raise
         except Exception as e:  # pragma: no cover - exercised via test mocks
             last_exc = e
             if not _is_rate_limit(e) or attempt == max_retries:
@@ -329,6 +345,9 @@ def main() -> None:
             max_retries=args.max_retries,
             initial_backoff_seconds=args.initial_backoff,
         )
+    except MissingDependencyError as e:
+        console.print(f"[red]Setup error: {e}[/red]")
+        sys.exit(3)
     except TrendsUnavailableError as e:
         console.print(f"[red]Trend data unavailable: {e}[/red]")
         console.print(

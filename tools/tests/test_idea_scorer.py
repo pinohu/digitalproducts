@@ -141,3 +141,39 @@ def test_render_backlog_entry_handles_missing_optional_fields():
     assert "(none recorded)" in entry
     assert "(no additional notes)" in entry
     assert "**Total: 0/50**" in entry
+
+
+def test_panel_fallback_supports_constructor_and_fit(monkeypatch):
+    """The no-rich fallback must mirror rich.Panel's constructor AND
+    `Panel.fit(...)`. collect_idea_metadata calls Panel.fit; show_dimension
+    calls Panel(...). Regression test for the AttributeError that occurred
+    when the fallback was a plain function rather than a class."""
+    import builtins
+    import importlib
+    import sys
+
+    real_import = builtins.__import__
+
+    def _block_rich(name, *args, **kwargs):
+        if name == "rich" or name.startswith("rich."):
+            raise ImportError(f"blocked for test: {name}")
+        return real_import(name, *args, **kwargs)
+
+    # Drop any cached rich + idea_scorer so the import goes through the patched
+    # builtin and exercises the fallback branch.
+    for mod in list(sys.modules):
+        if mod == "idea_scorer" or mod == "rich" or mod.startswith("rich."):
+            del sys.modules[mod]
+
+    monkeypatch.setattr(builtins, "__import__", _block_rich)
+    try:
+        scorer_no_rich = importlib.import_module("idea_scorer")
+    finally:
+        # Drop the no-rich version so other tests get a clean import.
+        sys.modules.pop("idea_scorer", None)
+
+    Panel = scorer_no_rich.Panel
+    p1 = Panel("hello", border_style="cyan")
+    p2 = Panel.fit("world", border_style="cyan")
+    assert "hello" in str(p1)
+    assert "world" in str(p2)

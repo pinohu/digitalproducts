@@ -241,3 +241,29 @@ def test_is_rate_limit_detects_status_code_response():
 
 def test_is_rate_limit_returns_false_for_unrelated_error():
     assert tc._is_rate_limit(ValueError("boom")) is False
+
+
+# ---------------------------------------------------------------------------
+# MissingDependencyError — pytrends not installed
+# ---------------------------------------------------------------------------
+
+
+def test_default_factory_raises_missing_dependency_when_pytrends_absent(monkeypatch):
+    monkeypatch.setattr(tc, "TrendReq", None)
+    with pytest.raises(tc.MissingDependencyError):
+        tc._default_trend_req_factory()
+
+
+def test_fetch_trends_surfaces_missing_dependency_not_unavailable(monkeypatch):
+    """Setup error must NOT be wrapped/retried as a transient outage."""
+    monkeypatch.setattr(tc, "TrendReq", None)
+    sleeps: list[float] = []
+    with pytest.raises(tc.MissingDependencyError):
+        tc.fetch_trends(
+            ["kw"],
+            lookback_months=12,
+            sleep_fn=sleeps.append,
+            max_retries=4,
+        )
+    # No retries on a missing-dependency error.
+    assert sleeps == []

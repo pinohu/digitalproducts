@@ -33,8 +33,19 @@ except ImportError:  # pragma: no cover
         def print(self, *args, **kwargs):
             print(*args)
 
-    def Panel(*args, **kwargs):  # type: ignore
-        return args[0] if args else ""
+    class Panel:  # type: ignore
+        # Mirrors the rich.Panel surface area we use: callable as a constructor
+        # AND classmethod-style `Panel.fit(...)`. Both just pass content through
+        # so the module stays importable without rich.
+        def __init__(self, content="", *args, **kwargs):
+            self.content = content
+
+        def __str__(self):
+            return str(self.content)
+
+        @classmethod
+        def fit(cls, content="", *args, **kwargs):
+            return cls(content, *args, **kwargs)
 
     class Table:  # type: ignore
         def __init__(self, *args, **kwargs):
