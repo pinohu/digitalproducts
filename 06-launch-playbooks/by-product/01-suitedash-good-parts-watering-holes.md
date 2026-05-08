@@ -124,6 +124,10 @@ Channel rebalance for the last-call push:
 
 Run through this list during Days 12–13 of the sprint (in addition to the existing pre-launch checklist):
 
+**📋 Full operational checklist with concrete dates and owners:** [`/06-launch-playbooks/by-product/01-suitedash-good-parts-distribution-checklist.md`](./01-suitedash-good-parts-distribution-checklist.md)
+
+Quick summary (the full checklist breaks each into atomic tasks with ETAs):
+
 - [ ] YouTube account configured: profile bio updated to one-line positioning + ikeohu.com link OR Gumroad pre-sell page URL
 - [ ] G2 reviewer account created/verified; profile complete with link
 - [ ] Capterra reviewer account created/verified; profile complete with link

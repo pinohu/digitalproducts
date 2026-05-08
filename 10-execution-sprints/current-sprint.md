@@ -88,6 +88,7 @@ Ship "The Good Parts of SuiteDash" — $49 PDF + 3 bonuses — live on Gumroad w
 - Email workflow: `/05-email-workflows/by-product/01-suitedash-good-parts/` ✅ (6 emails drafted)
 - Launch playbook (calendar): `/06-launch-playbooks/by-product/01-suitedash-good-parts.md` ✅ (header updated 2026-05-08)
 - **Launch playbook (watering holes): `/06-launch-playbooks/by-product/01-suitedash-good-parts-watering-holes.md` ✅ (NEW 2026-05-08)**
+- **Distribution checklist: `/06-launch-playbooks/by-product/01-suitedash-good-parts-distribution-checklist.md` ✅ (NEW 2026-05-08 — concrete daily to-dos)**
 - **YouTube comments playbook: `/07-traffic-engine/youtube-comments-playbook.md` ✅ (NEW 2026-05-08)**
 - **G2/Capterra Q&A playbook: `/07-traffic-engine/g2-capterra-qa-playbook.md` ✅ (NEW 2026-05-08)**
 - **YouTube comment scaffolds: `/shared-assets/swipe-files/youtube-comment-scaffolds.md` ✅ (NEW 2026-05-08)**

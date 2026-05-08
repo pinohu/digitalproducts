@@ -92,6 +92,7 @@ After ship:
 - Email workflow: `/05-email-workflows/by-product/01-suitedash-good-parts/` (6 email drafts)
 - Launch playbook (calendar): `/06-launch-playbooks/by-product/01-suitedash-good-parts.md`
 - **Launch playbook (watering holes): `/06-launch-playbooks/by-product/01-suitedash-good-parts-watering-holes.md`** *(NEW 2026-05-08 — distribution channel mix; read alongside the dated playbook)*
+- **Distribution checklist: `/06-launch-playbooks/by-product/01-suitedash-good-parts-distribution-checklist.md`** *(NEW 2026-05-08 — concrete daily to-dos with owners and ETAs from May 8 through launch)*
 - **Upwork productized listing: `./upwork-productized-listing.md`** *(NEW 2026-05-08 — $97 PDF + 30-min Q&A variant)*
 - Analytics: `/analytics/by-product/01-suitedash-good-parts.md`
 - Sprint: `/10-execution-sprints/current-sprint.md`
