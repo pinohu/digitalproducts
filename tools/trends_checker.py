@@ -14,18 +14,41 @@ from __future__ import annotations
 
 import argparse
 import sys
+import time
 from pathlib import Path
 
 import yaml
 
-try:
-    from pytrends.request import TrendReq
+# Lazy imports — rich/pytrends are only required for actual CLI runs, not for
+# unit tests that mock the trends backend. We surface clean errors when a
+# function that needs them is invoked without the dep installed.
+try:  # pragma: no cover
+    from pytrends.request import TrendReq  # type: ignore
+except ImportError:  # pragma: no cover
+    TrendReq = None  # type: ignore
+
+try:  # pragma: no cover
     from rich.console import Console
     from rich.panel import Panel
     from rich.table import Table
-except ImportError as e:
-    print(f"Missing dependency: {e}. Run: pip install -r requirements.txt", file=sys.stderr)
-    sys.exit(1)
+except ImportError:  # pragma: no cover
+    # Minimal stand-ins so tests can still import the module.
+    class Console:  # type: ignore
+        def print(self, *args, **kwargs):
+            print(*args)
+
+    def Panel(*args, **kwargs):  # type: ignore
+        return args[0] if args else ""
+
+    class Table:  # type: ignore
+        def __init__(self, *args, **kwargs):
+            self.rows = []
+
+        def add_column(self, *args, **kwargs):
+            pass
+
+        def add_row(self, *args, **kwargs):
+            self.rows.append(args)
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -52,9 +75,50 @@ def load_config() -> dict:
         return yaml.safe_load(f)
 
 
-def fetch_trends(keywords: list[str], lookback_months: int, geo: str = "") -> dict:
-    """Fetch Google Trends interest-over-time for given keywords."""
-    pytrends = TrendReq(hl="en-US", tz=300)
+class TrendsUnavailableError(RuntimeError):
+    """Raised when Google Trends data cannot be fetched after retries."""
+
+
+class MissingDependencyError(RuntimeError):
+    """Raised when a required CLI dependency (e.g. pytrends) isn't installed."""
+
+
+def _default_trend_req_factory():
+    if TrendReq is None:
+        raise MissingDependencyError(
+            "pytrends is not installed. Install with: "
+            "pip install -r tools/requirements.txt"
+        )
+    return TrendReq(hl="en-US", tz=360)
+
+
+def _is_rate_limit(exc: Exception) -> bool:
+    """Detect pytrends/requests 429-style failures across SDK versions."""
+    msg = str(exc).lower()
+    if "429" in msg or "too many requests" in msg or "rate limit" in msg:
+        return True
+    response = getattr(exc, "response", None)
+    if response is not None and getattr(response, "status_code", None) == 429:
+        return True
+    return False
+
+
+def fetch_trends(
+    keywords: list[str],
+    lookback_months: int,
+    geo: str = "",
+    *,
+    max_retries: int = 4,
+    initial_backoff_seconds: float = 5.0,
+    sleep_fn=time.sleep,
+    trend_req_factory=None,
+) -> dict:
+    """Fetch Google Trends interest-over-time for given keywords.
+
+    Retries with exponential backoff on rate-limit (429) responses. Raises
+    `TrendsUnavailableError` if pytrends keeps failing after the retry budget.
+    """
+    factory = trend_req_factory or _default_trend_req_factory
     timeframe = f"today {lookback_months}-m"
 
     console.print(
@@ -62,8 +126,34 @@ def fetch_trends(keywords: list[str], lookback_months: int, geo: str = "") -> di
         f"({timeframe}, geo={geo or 'global'})...[/cyan]"
     )
 
-    pytrends.build_payload(keywords, timeframe=timeframe, geo=geo)
-    interest = pytrends.interest_over_time()
+    backoff = initial_backoff_seconds
+    last_exc: Exception | None = None
+    for attempt in range(1, max_retries + 1):
+        try:
+            pytrends = factory()
+            pytrends.build_payload(keywords, timeframe=timeframe, geo=geo)
+            interest = pytrends.interest_over_time()
+            break
+        except MissingDependencyError:
+            # Not retryable; surface as a setup error, not a transient outage.
+            raise
+        except Exception as e:  # pragma: no cover - exercised via test mocks
+            last_exc = e
+            if not _is_rate_limit(e) or attempt == max_retries:
+                # Non-retryable, or out of retries.
+                raise TrendsUnavailableError(
+                    f"Google Trends unavailable after {attempt} attempt(s): {e}"
+                ) from e
+            console.print(
+                f"[yellow]Rate-limited by Google Trends "
+                f"(attempt {attempt}/{max_retries}); sleeping {backoff:.1f}s...[/yellow]"
+            )
+            sleep_fn(backoff)
+            backoff *= 2
+    else:  # pragma: no cover - loop exits via break/raise
+        raise TrendsUnavailableError(
+            f"Google Trends unavailable: {last_exc}"
+        ) from last_exc
 
     if interest.empty:
         return {kw: None for kw in keywords}
@@ -223,6 +313,18 @@ def main() -> None:
         default="",
         help="Geographic restriction (e.g., 'US', 'GB'). Default: global.",
     )
+    parser.add_argument(
+        "--max-retries",
+        type=int,
+        default=4,
+        help="Max retries on Google Trends rate-limit (429). Default: 4.",
+    )
+    parser.add_argument(
+        "--initial-backoff",
+        type=float,
+        default=5.0,
+        help="Initial backoff seconds between retries (doubles each attempt). Default: 5.0.",
+    )
     args = parser.parse_args()
 
     if len(args.keywords) > 5:
@@ -236,13 +338,25 @@ def main() -> None:
     thresholds = config["trends"]["growth_thresholds"]
 
     try:
-        results = fetch_trends(args.keywords, lookback, args.geo)
-    except Exception as e:
-        console.print(f"[red]Error fetching trends: {e}[/red]")
+        results = fetch_trends(
+            args.keywords,
+            lookback,
+            args.geo,
+            max_retries=args.max_retries,
+            initial_backoff_seconds=args.initial_backoff,
+        )
+    except MissingDependencyError as e:
+        console.print(f"[red]Setup error: {e}[/red]")
+        sys.exit(3)
+    except TrendsUnavailableError as e:
+        console.print(f"[red]Trend data unavailable: {e}[/red]")
         console.print(
             "[yellow]Google Trends has known intermittent issues. "
             "Wait 1 hour and retry, or check that pytrends is up to date.[/yellow]"
         )
+        sys.exit(2)
+    except Exception as e:
+        console.print(f"[red]Error fetching trends: {e}[/red]")
         sys.exit(1)
 
     render_results(results, thresholds)

@@ -1,0 +1,253 @@
+{
+  "name": "Analytics Aggregation",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {"field": "cronExpression", "expression": "0 7 * * FRI"}
+          ]
+        }
+      },
+      "id": "918af39d-a449-49a6-8c69-c2b26aebe231",
+      "name": "Cron Trigger (Fri 07:00 ET)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Compute the [previous_friday, this_friday) window in ISO 8601.\n// Used to bound the Gumroad and Plausible queries.\nconst now = new Date();\n// 'this Friday' = today (since cron runs on Friday morning)\nconst thisFriday = new Date(now);\nthisFriday.setUTCHours(0, 0, 0, 0);\nconst prevFriday = new Date(thisFriday);\nprevFriday.setUTCDate(prevFriday.getUTCDate() - 7);\nreturn [{\n  json: {\n    previous_friday: prevFriday.toISOString(),\n    this_friday: thisFriday.toISOString(),\n    week_ending: thisFriday.toISOString().slice(0, 10)\n  }\n}];"
+      },
+      "id": "6269df68-1408-483a-b0ea-9295ec7f82e2",
+      "name": "Compute Date Window",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.gumroad.com/v2/sales?after={{ $json.previous_friday }}&before={{ $json.this_friday }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "retry": {"retries": 3, "waitBetweenRetries": 10000},
+          "timeout": 60000
+        }
+      },
+      "id": "a72f7c1d-b14b-4a09-a470-15708bae064d",
+      "name": "Gumroad — Pull Sales",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [680, 300],
+      "credentials": {
+        "httpHeaderAuth": {"id": "REPLACE_ME", "name": "Gumroad API Key"}
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Group sales by product, sum revenue, count refunds, compute net revenue\n// (gross - refunds - 10% Gumroad fee). Output: per-product rollups + totals.\nconst sales = items[0].json.sales || [];\nconst byProduct = {};\nlet totalGross = 0;\nlet totalRefunds = 0;\nlet totalSales = 0;\nfor (const s of sales) {\n  const slug = (s.product_permalink || s.permalink || 'unknown').split('/').pop();\n  if (!byProduct[slug]) {\n    byProduct[slug] = {\n      slug,\n      product_name: s.product_name,\n      gross_cents: 0,\n      refund_cents: 0,\n      sales_count: 0,\n      refund_count: 0\n    };\n  }\n  const cents = parseInt(s.price, 10) || 0;\n  byProduct[slug].gross_cents += cents;\n  byProduct[slug].sales_count += 1;\n  totalGross += cents;\n  totalSales += 1;\n  if (s.refunded === true || s.refunded === 'true') {\n    byProduct[slug].refund_cents += cents;\n    byProduct[slug].refund_count += 1;\n    totalRefunds += cents;\n  }\n}\n// Apply 10% Gumroad fee on net (gross - refunds).\nfor (const p of Object.values(byProduct)) {\n  const netGross = p.gross_cents - p.refund_cents;\n  p.net_revenue_cents = Math.round(netGross * 0.9);\n  p.net_revenue_dollars = (p.net_revenue_cents / 100).toFixed(2);\n  p.gross_dollars = (p.gross_cents / 100).toFixed(2);\n}\nconst totalNet = Math.round((totalGross - totalRefunds) * 0.9);\nreturn [{\n  json: {\n    by_product: byProduct,\n    products: Object.values(byProduct),\n    totals: {\n      gross_cents: totalGross,\n      refund_cents: totalRefunds,\n      net_cents: totalNet,\n      sales_count: totalSales,\n      refund_count: Object.values(byProduct).reduce((a, p) => a + p.refund_count, 0),\n      gross_dollars: (totalGross / 100).toFixed(2),\n      net_dollars: (totalNet / 100).toFixed(2),\n      refund_rate: totalSales ? ((totalRefunds / totalGross) * 100).toFixed(2) : '0.00'\n    },\n    week_ending: $node['Compute Date Window'].json.week_ending\n  }\n}];"
+      },
+      "id": "a0fe988a-f26e-462a-94b7-debbe9bdcb22",
+      "name": "Aggregate by Product",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://plausible.io/api/v1/stats/aggregate?site_id=audreysplace.place&period=7d&metrics=visitors,pageviews",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "retry": {"retries": 2, "waitBetweenRetries": 5000}
+        }
+      },
+      "id": "05ce3d16-9abd-4cb9-b0ec-47deb1139ac0",
+      "name": "Plausible — Page Views",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1120, 300],
+      "credentials": {
+        "httpHeaderAuth": {"id": "REPLACE_ME", "name": "Plausible API"}
+      },
+      "onError": "continueRegularOutput",
+      "notes": "If down, downstream code falls back to last-week cached value and flags it."
+    },
+    {
+      "parameters": {
+        "jsCode": "// Compute conversion rate per product (sales / page views).\n// Plausible aggregate only gives total pageviews; for per-product\n// breakdown you'd query with filters. Here we approximate using the\n// total and divide proportionally to product traffic if breakdown\n// is unavailable.\nconst agg = $node['Aggregate by Product'].json;\nconst plausible = $node['Plausible — Page Views'].json;\nconst totalViews = plausible?.results?.pageviews?.value || 0;\nconst products = agg.products.map(p => ({\n  ...p,\n  // Naive even-split of pageviews; replace with per-page filtered\n  // queries when you have multiple sales pages tracked separately.\n  estimated_views: agg.products.length ? Math.round(totalViews / agg.products.length) : 0,\n  conversion_rate: (agg.products.length && totalViews)\n    ? ((p.sales_count / (totalViews / agg.products.length)) * 100).toFixed(2)\n    : '0.00'\n}));\nreturn [{\n  json: {\n    ...agg,\n    products,\n    plausible_total_pageviews: totalViews,\n    plausible_available: !!totalViews\n  }\n}];"
+      },
+      "id": "7a87da22-9dae-4a64-a0fb-bf1cef93b6b2",
+      "name": "Compute Conversion Rates",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1340, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.github.com/repos/pinohu/digitalproducts/contents/analytics/revenue-tracker.md",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "ea4b2b0b-29e5-4d02-b11d-70d57c74b8d6",
+      "name": "GitHub — Read Revenue Tracker",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1560, 200],
+      "credentials": {
+        "httpHeaderAuth": {"id": "REPLACE_ME", "name": "GitHub PAT (Bearer)"}
+      }
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.github.com/repos/pinohu/digitalproducts/contents/analytics/conversion-tracker.md",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "b4dbcda9-07fb-4b8e-a6c8-a258321562a5",
+      "name": "GitHub — Read Conversion Tracker",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1560, 400],
+      "credentials": {
+        "httpHeaderAuth": {"id": "REPLACE_ME", "name": "GitHub PAT (Bearer)"}
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Append a new weekly row to revenue-tracker.md and conversion-tracker.md.\n// Both files are expected to have a markdown table the bot extends.\nconst stats = $node['Compute Conversion Rates'].json;\nconst rev = $input.all()[0].json;       // GitHub — Read Revenue Tracker\nconst conv = $input.all()[1].json;      // GitHub — Read Conversion Tracker\nconst week = stats.week_ending;\nconst t = stats.totals;\n\n// Revenue row: | week | total sales | gross | net | refund rate |\nconst revRow = `| ${week} | ${t.sales_count} | $${t.gross_dollars} | $${t.net_dollars} | ${t.refund_rate}% |`;\nconst revContent = Buffer.from(rev.content, 'base64').toString('utf-8') + '\\n' + revRow;\n\n// Conversion rows: one per product\nconst convRows = stats.products.map(p =>\n  `| ${week} | ${p.slug} | ${p.sales_count} | ${p.estimated_views} | ${p.conversion_rate}% |`\n).join('\\n');\nconst convContent = Buffer.from(conv.content, 'base64').toString('utf-8') + '\\n' + convRows;\n\nreturn [{\n  json: {\n    revenue: {\n      sha: rev.sha,\n      content_b64: Buffer.from(revContent).toString('base64'),\n      path: 'analytics/revenue-tracker.md'\n    },\n    conversion: {\n      sha: conv.sha,\n      content_b64: Buffer.from(convContent).toString('base64'),\n      path: 'analytics/conversion-tracker.md'\n    },\n    week_ending: week,\n    totals: t,\n    products: stats.products\n  }\n}];"
+      },
+      "id": "8d94c643-54c8-458f-9315-efcce4455652",
+      "name": "Build Updated Trackers",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1780, 300]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "https://api.github.com/repos/pinohu/digitalproducts/contents/analytics/revenue-tracker.md",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"chore(analytics): weekly revenue update {{ $json.week_ending }}\",\n  \"content\": \"{{ $json.revenue.content_b64 }}\",\n  \"sha\": \"{{ $json.revenue.sha }}\",\n  \"branch\": \"main\"\n}",
+        "options": {
+          "retry": {"retries": 1, "waitBetweenRetries": 5000}
+        }
+      },
+      "id": "ff2c0a84-2bee-46c7-b679-f6b660795fde",
+      "name": "GitHub — Commit Revenue Tracker",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2000, 200],
+      "credentials": {
+        "httpHeaderAuth": {"id": "REPLACE_ME", "name": "GitHub PAT (Bearer)"}
+      }
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "https://api.github.com/repos/pinohu/digitalproducts/contents/analytics/conversion-tracker.md",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"chore(analytics): weekly conversion update {{ $node['Build Updated Trackers'].json.week_ending }}\",\n  \"content\": \"{{ $node['Build Updated Trackers'].json.conversion.content_b64 }}\",\n  \"sha\": \"{{ $node['Build Updated Trackers'].json.conversion.sha }}\",\n  \"branch\": \"main\"\n}",
+        "options": {
+          "retry": {"retries": 1, "waitBetweenRetries": 5000}
+        }
+      },
+      "id": "3e61ebe1-b699-44c0-9653-70ec3381df3d",
+      "name": "GitHub — Commit Conversion Tracker",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2000, 400],
+      "credentials": {
+        "httpHeaderAuth": {"id": "REPLACE_ME", "name": "GitHub PAT (Bearer)"}
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Build the weekly Slack/email summary.\nconst data = $node['Build Updated Trackers'].json;\nconst t = data.totals;\nconst products = data.products.slice().sort((a, b) => b.sales_count - a.sales_count);\nconst top = products[0] || { product_name: '(none)', sales_count: 0 };\nconst summary = `Week ending ${data.week_ending}:\\n` +\n  `- Total revenue (net): $${t.net_dollars} (gross $${t.gross_dollars})\\n` +\n  `- Total sales: ${t.sales_count}\\n` +\n  `- Top product: ${top.product_name} (${top.sales_count} sales)\\n` +\n  `- Refunds: ${t.refund_count} (rate: ${t.refund_rate}%)`;\nreturn [{ json: { summary, week_ending: data.week_ending } }];"
+      },
+      "id": "3618e8dd-d7a5-4a55-b6f5-bf265dd6f9da",
+      "name": "Generate Summary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2220, 300]
+    },
+    {
+      "parameters": {
+        "channel": "#dynasty-analytics",
+        "text": "={{ $json.summary }}",
+        "otherOptions": {}
+      },
+      "id": "08b800aa-7842-4f95-ac25-7123a397628d",
+      "name": "Slack — Weekly Summary",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [2440, 300],
+      "credentials": {
+        "slackApi": {"id": "REPLACE_ME", "name": "Slack API"}
+      }
+    }
+  ],
+  "connections": {
+    "Cron Trigger (Fri 07:00 ET)": {
+      "main": [[{"node": "Compute Date Window", "type": "main", "index": 0}]]
+    },
+    "Compute Date Window": {
+      "main": [[{"node": "Gumroad — Pull Sales", "type": "main", "index": 0}]]
+    },
+    "Gumroad — Pull Sales": {
+      "main": [[{"node": "Aggregate by Product", "type": "main", "index": 0}]]
+    },
+    "Aggregate by Product": {
+      "main": [[{"node": "Plausible — Page Views", "type": "main", "index": 0}]]
+    },
+    "Plausible — Page Views": {
+      "main": [[{"node": "Compute Conversion Rates", "type": "main", "index": 0}]]
+    },
+    "Compute Conversion Rates": {
+      "main": [[
+        {"node": "GitHub — Read Revenue Tracker", "type": "main", "index": 0},
+        {"node": "GitHub — Read Conversion Tracker", "type": "main", "index": 0}
+      ]]
+    },
+    "GitHub — Read Revenue Tracker": {
+      "main": [[{"node": "Build Updated Trackers", "type": "main", "index": 0}]]
+    },
+    "GitHub — Read Conversion Tracker": {
+      "main": [[{"node": "Build Updated Trackers", "type": "main", "index": 1}]]
+    },
+    "Build Updated Trackers": {
+      "main": [[
+        {"node": "GitHub — Commit Revenue Tracker", "type": "main", "index": 0},
+        {"node": "GitHub — Commit Conversion Tracker", "type": "main", "index": 0}
+      ]]
+    },
+    "GitHub — Commit Revenue Tracker": {
+      "main": [[{"node": "Generate Summary", "type": "main", "index": 0}]]
+    },
+    "GitHub — Commit Conversion Tracker": {
+      "main": [[]]
+    },
+    "Generate Summary": {
+      "main": [[{"node": "Slack — Weekly Summary", "type": "main", "index": 0}]]
+    }
+  },
+  "active": false,
+  "settings": {"executionOrder": "v1"},
+  "versionId": "c39efb7d-0d9b-4432-90dc-9e85a4921bba",
+  "id": "analytics-aggregation",
+  "meta": {"templateCredsSetupCompleted": false},
+  "tags": []
+}

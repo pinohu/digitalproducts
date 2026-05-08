@@ -1,0 +1,399 @@
+{
+  "name": "Launch Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "launch/start",
+        "authentication": "headerAuth",
+        "options": {
+          "responseMode": "onReceived",
+          "responseData": "Launch started"
+        }
+      },
+      "id": "73903db5-2bd6-4b3e-a11a-72ba5309950b",
+      "name": "Webhook — Launch Start",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [240, 300],
+      "credentials": {
+        "httpHeaderAuth": {"id": "REPLACE_ME", "name": "Launch Webhook Bearer Token"}
+      },
+      "webhookId": "7ee7a268-13ec-4c6f-bd1e-11ff51f41a8d"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Pull required launch parameters from the webhook body and fail fast\n// if anything is missing. The downstream HTTP nodes use these values\n// directly via expressions.\nconst body = items[0].json.body || items[0].json;\nconst { product_slug, launch_datetime, founding_price_expires } = body;\nif (!product_slug || !launch_datetime || !founding_price_expires) {\n  throw new Error('Missing required field: product_slug, launch_datetime, or founding_price_expires');\n}\nreturn [{\n  json: {\n    product_slug,\n    launch_datetime,\n    founding_price_expires,\n    offer_path: `02-offers/by-product/${product_slug}.md`,\n    sales_path: `04-sales-pages/by-product/${product_slug}.md`,\n    emails_path: `05-email-workflows/by-product/${product_slug}/launch-sequence.md`\n  }\n}];"
+      },
+      "id": "5e5e8cff-5f77-4606-a771-1f31f87d883e",
+      "name": "Extract Launch Params",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.github.com/repos/pinohu/digitalproducts/contents/{{ $json.offer_path }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "80b9b08f-bdd9-46b8-a9aa-02b2913b73b4",
+      "name": "GitHub — Load Offer Brief",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [680, 200],
+      "credentials": {
+        "httpHeaderAuth": {"id": "REPLACE_ME", "name": "GitHub PAT (Bearer)"}
+      }
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.github.com/repos/pinohu/digitalproducts/contents/{{ $node['Extract Launch Params'].json.sales_path }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "f5c680d3-078b-4b12-9274-af262d3227f1",
+      "name": "GitHub — Load Sales Page",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [680, 300],
+      "credentials": {
+        "httpHeaderAuth": {"id": "REPLACE_ME", "name": "GitHub PAT (Bearer)"}
+      }
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.github.com/repos/pinohu/digitalproducts/contents/{{ $node['Extract Launch Params'].json.emails_path }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "db5cabf4-55a1-4b8b-8aa0-abfd1475c195",
+      "name": "GitHub — Load Email Sequence",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [680, 400],
+      "credentials": {
+        "httpHeaderAuth": {"id": "REPLACE_ME", "name": "GitHub PAT (Bearer)"}
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Validate that all three context files were loaded and that the\n// email sequence is not still using template placeholders. Returns a\n// single item carrying the parsed email bodies plus a `valid` flag.\nconst all = $input.all();\nconst offer = all[0]?.json;\nconst sales = all[1]?.json;\nconst emails = all[2]?.json;\nconst params = $node['Extract Launch Params'].json;\n\nconst missing = [];\nif (!offer?.content) missing.push('offer brief');\nif (!sales?.content) missing.push('sales page');\nif (!emails?.content) missing.push('launch sequence');\n\nlet emailBody = '';\nif (emails?.content) {\n  emailBody = Buffer.from(emails.content, 'base64').toString('utf-8');\n}\n// Parse the launch-sequence.md file: we expect 8 sections each starting\n// with '## Email N' headers. Any section that still contains the literal\n// '[PLACEHOLDER]' marker is treated as un-drafted.\nconst sections = emailBody.split(/\\n## Email \\d+/);\n// sections[0] is the preamble; emails are sections[1..].\nconst emailSections = sections.slice(1).map((s, i) => ({\n  index: i + 1,\n  body: s.trim()\n}));\nconst placeholders = emailSections.filter(e => /\\[PLACEHOLDER\\]/i.test(e.body));\nconst valid = missing.length === 0 && emailSections.length >= 7 && placeholders.length === 0;\n\nreturn [{\n  json: {\n    valid,\n    missing,\n    placeholder_count: placeholders.length,\n    email_count: emailSections.length,\n    emails: emailSections,\n    product_slug: params.product_slug,\n    launch_datetime: params.launch_datetime,\n    founding_price_expires: params.founding_price_expires\n  }\n}];"
+      },
+      "id": "c5719855-905a-46bf-acd7-c163bc3813ff",
+      "name": "Validate Prerequisites",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {"caseSensitive": true, "leftValue": "", "typeValidation": "loose"},
+          "conditions": [
+            {
+              "id": "valid-gate",
+              "leftValue": "={{ $json.valid }}",
+              "rightValue": true,
+              "operator": {"type": "boolean", "operation": "equals"}
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "2fbfd2a4-894b-4f95-8d35-aa8ba0f79e78",
+      "name": "IF — All Prereqs OK?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "channel": "#dynasty-launches",
+        "text": "=:rotating_light: Launch *aborted* for `{{ $node['Validate Prerequisites'].json.product_slug }}` — missing: {{ $node['Validate Prerequisites'].json.missing.join(', ') }}; placeholders: {{ $node['Validate Prerequisites'].json.placeholder_count }}",
+        "otherOptions": {}
+      },
+      "id": "6f34abee-1328-4663-8da1-05934f67b966",
+      "name": "Slack — Abort Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [1340, 500],
+      "credentials": {
+        "slackApi": {"id": "REPLACE_ME", "name": "Slack API"}
+      }
+    },
+    {
+      "parameters": {
+        "channel": "#dynasty-launches",
+        "text": "=:white_check_mark: Launch prereqs OK for `{{ $json.product_slug }}`. Approve sending Email 1 by reacting :rocket: to this message. Workflow will resume at {{ $json.launch_datetime }} (no manual approval gate after that until Email 7).",
+        "otherOptions": {}
+      },
+      "id": "631a3d2a-2e85-40a1-a9b0-6c5fc998fcf5",
+      "name": "Slack — Go/No-Go Gate (Email 1)",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [1340, 200],
+      "credentials": {
+        "slackApi": {"id": "REPLACE_ME", "name": "Slack API"}
+      }
+    },
+    {
+      "parameters": {
+        "resume": "specificTime",
+        "dateTime": "={{ $node['Validate Prerequisites'].json.launch_datetime }}"
+      },
+      "id": "6c30d818-c4dc-4829-9286-db266400f646",
+      "name": "Wait Until Launch Time",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [1560, 200]
+    },
+    {
+      "parameters": {
+        "workflowId": "REPLACE_ME_SUBWORKFLOW_ID_EMAIL_SENDER",
+        "options": {}
+      },
+      "id": "d6d83410-1642-462c-8724-9c517a57611f",
+      "name": "Send Email 1 (The Reveal)",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [1780, 100],
+      "notes": "Sub-workflow takes { email_index: 1, emails, product_slug } and posts to ConvertKit/Beehiiv API."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.taplio.com/v1/posts",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"text\": \"Live now: {{ $node['Validate Prerequisites'].json.product_slug }} launch announcement.\",\n  \"schedule_at\": \"{{ $node['Validate Prerequisites'].json.launch_datetime }}\"\n}",
+        "options": {"retry": {"retries": 2, "waitBetweenRetries": 5000}}
+      },
+      "id": "c0f996c7-08bd-44ee-9a1c-aa6c4d75ee37",
+      "name": "LinkedIn — Day 0 Announcement",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1780, 300],
+      "credentials": {
+        "httpHeaderAuth": {"id": "REPLACE_ME", "name": "Taplio / LinkedIn API"}
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "amount": 7,
+        "unit": "hours"
+      },
+      "id": "d5f45958-35de-4d83-9045-e0a5d6fc0ca7",
+      "name": "Wait 7h → Email 2",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [2000, 200]
+    },
+    {
+      "parameters": {
+        "workflowId": "REPLACE_ME_SUBWORKFLOW_ID_EMAIL_SENDER",
+        "options": {}
+      },
+      "id": "0ec763f7-076f-4b02-b701-13329f3c5bac",
+      "name": "Send Emails 2-6 + Day 2 Social",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [2220, 200],
+      "notes": "Sub-workflow runs the Day 0 16:00 → Day 5 09:00 portion: Email 2, wait 17h, Email 3 + LinkedIn testimonial, wait 24h, Email 4, wait 48h, Email 5, wait 24h, Email 6. Splitting this out keeps the parent workflow under 25 nodes and makes the ~5-day chunk reusable for re-launches."
+    },
+    {
+      "parameters": {
+        "amount": 24,
+        "unit": "hours"
+      },
+      "id": "14c1365a-e430-4af1-861e-b1d6e72cbc90",
+      "name": "Wait 24h → Email 7",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [2440, 200]
+    },
+    {
+      "parameters": {
+        "channel": "#dynasty-launches",
+        "text": "=:warning: Last-call gate: Email 7 about to send for `{{ $node['Validate Prerequisites'].json.product_slug }}`. Reply with `confirm` in the next 30 minutes to abort.",
+        "otherOptions": {}
+      },
+      "id": "af790601-4459-4921-8e8c-148dce0d6c94",
+      "name": "Slack — Last-Call Gate (Email 7)",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [2660, 200],
+      "credentials": {
+        "slackApi": {"id": "REPLACE_ME", "name": "Slack API"}
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": "REPLACE_ME_SUBWORKFLOW_ID_EMAIL_SENDER",
+        "options": {}
+      },
+      "id": "297e7e16-39a2-4598-95b2-627906281812",
+      "name": "Send Email 7 + LinkedIn Final",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [2880, 200],
+      "notes": "Sub-workflow: Email 7 + Day 6 LinkedIn last-call post."
+    },
+    {
+      "parameters": {
+        "amount": 11,
+        "unit": "hours"
+      },
+      "id": "c5baf235-e6b4-4836-a50f-203b3cbfb9f3",
+      "name": "Wait 11h → Email 8",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [3100, 200]
+    },
+    {
+      "parameters": {
+        "workflowId": "REPLACE_ME_SUBWORKFLOW_ID_EMAIL_SENDER",
+        "options": {}
+      },
+      "id": "bb70db92-a98d-4da6-b052-eeb385d996f7",
+      "name": "Send Email 8 (4h Left)",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [3320, 200]
+    },
+    {
+      "parameters": {
+        "resume": "specificTime",
+        "dateTime": "={{ $node['Validate Prerequisites'].json.founding_price_expires }}"
+      },
+      "id": "e73a15e7-e957-456d-8505-485c5a482bee",
+      "name": "Wait Until Founding Price Expires",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [3540, 200]
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://api.gumroad.com/v2/products/{{ $node['Validate Prerequisites'].json.product_slug }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"price\": \"full\"\n}",
+        "options": {"retry": {"retries": 3, "waitBetweenRetries": 5000}}
+      },
+      "id": "a6180243-fc7c-4e37-9423-34a17266483c",
+      "name": "Gumroad — Disable Founding Price",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [3760, 200],
+      "credentials": {
+        "httpHeaderAuth": {"id": "REPLACE_ME", "name": "Gumroad API Key"}
+      }
+    },
+    {
+      "parameters": {
+        "channel": "#dynasty-launches",
+        "text": "=:checkered_flag: Launch complete for `{{ $node['Validate Prerequisites'].json.product_slug }}`. Founding price disabled. Run analytics-aggregation manually for final tally.",
+        "otherOptions": {}
+      },
+      "id": "eb3062c8-b8ae-4795-a3b4-65cc448366ed",
+      "name": "Slack — Launch Complete",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [3980, 200],
+      "credentials": {
+        "slackApi": {"id": "REPLACE_ME", "name": "Slack API"}
+      }
+    }
+  ],
+  "connections": {
+    "Webhook — Launch Start": {
+      "main": [[{"node": "Extract Launch Params", "type": "main", "index": 0}]]
+    },
+    "Extract Launch Params": {
+      "main": [[
+        {"node": "GitHub — Load Offer Brief", "type": "main", "index": 0},
+        {"node": "GitHub — Load Sales Page", "type": "main", "index": 0},
+        {"node": "GitHub — Load Email Sequence", "type": "main", "index": 0}
+      ]]
+    },
+    "GitHub — Load Offer Brief": {
+      "main": [[{"node": "Validate Prerequisites", "type": "main", "index": 0}]]
+    },
+    "GitHub — Load Sales Page": {
+      "main": [[{"node": "Validate Prerequisites", "type": "main", "index": 1}]]
+    },
+    "GitHub — Load Email Sequence": {
+      "main": [[{"node": "Validate Prerequisites", "type": "main", "index": 2}]]
+    },
+    "Validate Prerequisites": {
+      "main": [[{"node": "IF — All Prereqs OK?", "type": "main", "index": 0}]]
+    },
+    "IF — All Prereqs OK?": {
+      "main": [
+        [{"node": "Slack — Go/No-Go Gate (Email 1)", "type": "main", "index": 0}],
+        [{"node": "Slack — Abort Notification", "type": "main", "index": 0}]
+      ]
+    },
+    "Slack — Go/No-Go Gate (Email 1)": {
+      "main": [[{"node": "Wait Until Launch Time", "type": "main", "index": 0}]]
+    },
+    "Wait Until Launch Time": {
+      "main": [[
+        {"node": "Send Email 1 (The Reveal)", "type": "main", "index": 0},
+        {"node": "LinkedIn — Day 0 Announcement", "type": "main", "index": 0}
+      ]]
+    },
+    "Send Email 1 (The Reveal)": {
+      "main": [[{"node": "Wait 7h → Email 2", "type": "main", "index": 0}]]
+    },
+    "LinkedIn — Day 0 Announcement": {
+      "main": [[]]
+    },
+    "Wait 7h → Email 2": {
+      "main": [[{"node": "Send Emails 2-6 + Day 2 Social", "type": "main", "index": 0}]]
+    },
+    "Send Emails 2-6 + Day 2 Social": {
+      "main": [[{"node": "Wait 24h → Email 7", "type": "main", "index": 0}]]
+    },
+    "Wait 24h → Email 7": {
+      "main": [[{"node": "Slack — Last-Call Gate (Email 7)", "type": "main", "index": 0}]]
+    },
+    "Slack — Last-Call Gate (Email 7)": {
+      "main": [[{"node": "Send Email 7 + LinkedIn Final", "type": "main", "index": 0}]]
+    },
+    "Send Email 7 + LinkedIn Final": {
+      "main": [[{"node": "Wait 11h → Email 8", "type": "main", "index": 0}]]
+    },
+    "Wait 11h → Email 8": {
+      "main": [[{"node": "Send Email 8 (4h Left)", "type": "main", "index": 0}]]
+    },
+    "Send Email 8 (4h Left)": {
+      "main": [[{"node": "Wait Until Founding Price Expires", "type": "main", "index": 0}]]
+    },
+    "Wait Until Founding Price Expires": {
+      "main": [[{"node": "Gumroad — Disable Founding Price", "type": "main", "index": 0}]]
+    },
+    "Gumroad — Disable Founding Price": {
+      "main": [[{"node": "Slack — Launch Complete", "type": "main", "index": 0}]]
+    }
+  },
+  "active": false,
+  "settings": {"executionOrder": "v1"},
+  "versionId": "f15f00a6-caf6-49f2-93ea-58238066ade0",
+  "id": "launch-automation",
+  "meta": {"templateCredsSetupCompleted": false},
+  "tags": []
+}

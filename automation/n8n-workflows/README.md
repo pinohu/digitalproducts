@@ -20,7 +20,7 @@ Each spec describes:
 - **Error handling** strategy
 - **Rate limit considerations**
 
-The specs are NOT importable n8n JSON — they're build instructions. n8n's JSON format requires actual node UUIDs and is brittle to share. The instructions are designed to be implemented in n8n's visual editor in 30-60 minutes per workflow.
+The specs are the canonical reference. Alongside each spec there is now an importable n8n JSON file (same basename) generated from the spec — see [Importing the Workflows](#importing-the-workflows) below. The specs remain the source of truth; if you change a workflow's behavior, update the spec and re-export the JSON.
 
 ## Build Order
 
@@ -47,6 +47,38 @@ Before any workflow runs, configure these credentials in n8n:
 ## Convention: Source-of-Truth in Git
 
 All workflow outputs that represent durable state (idea-backlog entries, analytics rows, review documents) write to this Git repo via the GitHub API rather than storing in n8n's database. This makes the repo the canonical source — n8n is just the runtime.
+
+## Importing the Workflows
+
+Each spec has a sibling `.json` file ready to import into n8n:
+
+| Workflow file | Spec |
+|---|---|
+| `idea-discovery-pipeline.json` | `idea-discovery-pipeline.md` |
+| `launch-automation.json` | `launch-automation.md` |
+| `post-purchase-automation.json` | `post-purchase-automation.md` |
+| `analytics-aggregation.json` | `analytics-aggregation.md` |
+
+### Steps
+
+1. Download the desired `.json` file from this directory (or clone the repo).
+2. In your n8n instance (e.g. `n8n.audreysplace.place`), go to **Workflows** in the left sidebar.
+3. Click **Add workflow → Import from File** (or the three-dot menu → **Import from File**).
+4. Select the downloaded `.json`. The workflow loads in the editor with `active: false`.
+5. For every node that shows a red credential warning, open it and pick the matching credential from your n8n credential store (or create one). The exported JSON ships with placeholder `{ "id": "REPLACE_ME", ... }` references — no secrets are embedded.
+6. For `launch-automation.json`, also replace `REPLACE_ME_SUBWORKFLOW_ID_EMAIL_SENDER` in the three Execute Workflow nodes with the ID of your own email-sender sub-workflow (the parent workflow is split this way to stay under 25 nodes).
+7. Save, then run once manually with safe inputs before flipping the **Active** toggle on.
+
+### Credentials Each Workflow Expects
+
+| Workflow | Credentials referenced (by placeholder name) |
+|---|---|
+| `idea-discovery-pipeline.json` | Reddit OAuth2, Anthropic API (x-api-key), GitHub PAT (Bearer), Slack API |
+| `launch-automation.json` | Launch Webhook Bearer Token, GitHub PAT (Bearer), Slack API, Taplio / LinkedIn API, Gumroad API Key |
+| `post-purchase-automation.json` | Gumroad Webhook Signing Secret, GitHub PAT (Bearer), Slack API, ConvertKit/Beehiiv API, Gumroad API Key |
+| `analytics-aggregation.json` | Gumroad API Key, Plausible API, GitHub PAT (Bearer), Slack API |
+
+Credential placeholders all use `id: "REPLACE_ME"` so n8n will surface the missing reference clearly in the editor — there is no chance of an exported credential leaking through.
 
 ## Rate Limits
 

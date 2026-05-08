@@ -21,3 +21,6 @@ markdown-it-py>=3.0.0
 
 # Pretty CLI output
 rich>=13.7.0
+
+# Testing
+pytest>=7.0

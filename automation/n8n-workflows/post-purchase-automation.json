@@ -1,0 +1,349 @@
+{
+  "name": "Post-Purchase Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "gumroad/purchase",
+        "authentication": "headerAuth",
+        "options": {
+          "responseMode": "onReceived",
+          "responseData": "OK"
+        }
+      },
+      "id": "3b6d46c2-1e99-4fad-82e0-7687864992cf",
+      "name": "Webhook — Gumroad Purchase",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [240, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_ME",
+          "name": "Gumroad Webhook Signing Secret"
+        }
+      },
+      "webhookId": "853458ad-8187-48b6-810d-8d1cdd41b760"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Normalize Gumroad webhook payload into a clean object the rest of the\n// workflow can rely on. Gumroad sends form-encoded data; n8n parses it\n// into $json.body, but field shapes vary across product types so we\n// defensively coerce here.\nconst raw = items[0].json.body || items[0].json;\nconst priceCents = parseInt(raw.price, 10) || 0;\nconst isTest = String(raw.test).toLowerCase() === 'true';\nreturn [{\n  json: {\n    purchase_id: raw.purchase_id || raw.sale_id,\n    product_id: raw.product_id,\n    product_name: raw.product_name,\n    product_permalink: raw.product_permalink || raw.permalink,\n    product_slug: (raw.product_permalink || raw.permalink || '').split('/').pop(),\n    price_cents: priceCents,\n    price_dollars: (priceCents / 100).toFixed(2),\n    currency: raw.currency || 'USD',\n    email: raw.email,\n    full_name: raw.full_name || raw.email,\n    discount_code: raw.discount_code || null,\n    test: isTest,\n    timestamp: raw.timestamp || new Date().toISOString()\n  }\n}];"
+      },
+      "id": "708bd194-3d96-4b90-87e3-3ed944cf03d3",
+      "name": "Normalize Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {"caseSensitive": true, "leftValue": "", "typeValidation": "loose"},
+          "conditions": [
+            {
+              "id": "test-gate",
+              "leftValue": "={{ $json.test }}",
+              "rightValue": false,
+              "operator": {"type": "boolean", "operation": "equals"}
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "03be0ba1-caec-4eb8-9079-ebf20007e5ea",
+      "name": "IF — Real Purchase?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Test purchase path: just log the payload. No real notifications,\n// no analytics commits, no email tagging.\nconsole.log('Test purchase received, skipping side effects:', JSON.stringify(items[0].json));\nreturn items;"
+      },
+      "id": "9da79521-b381-4f4d-b51e-809e9f1f0699",
+      "name": "Log Test Purchase",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 500]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Build the markdown row to append to analytics/by-product/<slug>.md.\n// Format: | date | name | email | price | discount |\nconst p = items[0].json;\nconst date = (p.timestamp || '').slice(0, 10);\nconst row = `| ${date} | ${p.full_name} | ${p.email} | $${p.price_dollars} | ${p.discount_code || '-'} | ${p.purchase_id} |`;\nreturn [{ json: { ...p, sale_row: row, file_path: `analytics/by-product/${p.product_slug}.md` } }];"
+      },
+      "id": "44092e98-586c-43b3-bd39-98cc8622b0d6",
+      "name": "Format Sale Row",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.github.com/repos/pinohu/digitalproducts/contents/{{ $json.file_path }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {
+          "retry": {"retries": 3, "waitBetweenRetries": 3000}
+        }
+      },
+      "id": "afff1d23-5774-4614-ba1c-f2041d3a9189",
+      "name": "GitHub — Read Product File",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1120, 300],
+      "credentials": {
+        "httpHeaderAuth": {"id": "REPLACE_ME", "name": "GitHub PAT (Bearer)"}
+      }
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://api.github.com/repos/pinohu/digitalproducts/contents/{{ $node['Format Sale Row'].json.file_path }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"chore(analytics): log sale {{ $node['Format Sale Row'].json.purchase_id }}\",\n  \"content\": \"={{ Buffer.from(Buffer.from($node['GitHub — Read Product File'].json.content, 'base64').toString('utf-8') + '\\n' + $node['Format Sale Row'].json.sale_row).toString('base64') }}\",\n  \"sha\": \"{{ $node['GitHub — Read Product File'].json.sha }}\",\n  \"branch\": \"main\"\n}",
+        "options": {
+          "retry": {"retries": 3, "waitBetweenRetries": 5000}
+        }
+      },
+      "id": "a156d2f6-198b-470f-9b78-340920883c80",
+      "name": "GitHub — Append Sale Row",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1340, 300],
+      "credentials": {
+        "httpHeaderAuth": {"id": "REPLACE_ME", "name": "GitHub PAT (Bearer)"}
+      }
+    },
+    {
+      "parameters": {
+        "channel": "#dynasty-sales",
+        "text": "=:tada: New sale: *{{ $node['Format Sale Row'].json.full_name }}* bought *{{ $node['Format Sale Row'].json.product_name }}* for ${{ $node['Format Sale Row'].json.price_dollars }}{{ $node['Format Sale Row'].json.discount_code ? ' (code: ' + $node['Format Sale Row'].json.discount_code + ')' : '' }}.",
+        "otherOptions": {}
+      },
+      "id": "b1cdec02-48df-46fd-ab3f-ad99d9b42f93",
+      "name": "Slack — Sale Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [1560, 300],
+      "credentials": {
+        "slackApi": {"id": "REPLACE_ME", "name": "Slack API"}
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.convertkit.com/v3/tags",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"email\": \"{{ $node['Format Sale Row'].json.email }}\",\n  \"tag\": \"buyers-{{ $node['Format Sale Row'].json.product_slug }}\"\n}",
+        "options": {
+          "retry": {"retries": 2, "waitBetweenRetries": 3000}
+        }
+      },
+      "id": "b4591458-e930-49ad-8595-648fe1fb9ce7",
+      "name": "Email Tool — Tag Buyer",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1780, 300],
+      "credentials": {
+        "httpHeaderAuth": {"id": "REPLACE_ME", "name": "ConvertKit/Beehiiv API"}
+      },
+      "onError": "continueRegularOutput",
+      "notes": "Skip in Gumroad-native phase; Gumroad's workflow handles tagging."
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.gumroad.com/v2/sales?email={{ encodeURIComponent($node['Format Sale Row'].json.email) }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "7dd82fb1-76ed-45d1-87c4-36c07995727a",
+      "name": "Gumroad — Lookup Buyer History",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2000, 300],
+      "credentials": {
+        "httpHeaderAuth": {"id": "REPLACE_ME", "name": "Gumroad API Key"}
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {"caseSensitive": true, "leftValue": "", "typeValidation": "loose"},
+          "conditions": [
+            {
+              "id": "ltv-gate",
+              "leftValue": "={{ ($json.sales || []).length }}",
+              "rightValue": 1,
+              "operator": {"type": "number", "operation": "gt"}
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "eddf2dfb-bcec-4f0c-ab9b-1a799624bc1c",
+      "name": "IF — Repeat Buyer?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [2220, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.convertkit.com/v3/tags",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"email\": \"{{ $node['Format Sale Row'].json.email }}\",\n  \"tag\": \"high-LTV-cohort\"\n}",
+        "options": {}
+      },
+      "id": "cb2301c5-d259-42e8-a0a7-e2a89080a390",
+      "name": "Tag — High-LTV Cohort",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2440, 200],
+      "credentials": {
+        "httpHeaderAuth": {"id": "REPLACE_ME", "name": "ConvertKit/Beehiiv API"}
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.github.com/repos/pinohu/digitalproducts/contents/10-execution-sprints/current-sprint.md",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "0f76e0b2-1bfe-4016-93c8-2ea4ff2c2dc0",
+      "name": "GitHub — Read Current Sprint",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2440, 400],
+      "credentials": {
+        "httpHeaderAuth": {"id": "REPLACE_ME", "name": "GitHub PAT (Bearer)"}
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Increment the launch-day counter inside current-sprint.md if the\n// active product (parsed from the file) matches this purchase. If no\n// match (or no active launch), pass through with no-op flag set.\nconst sprintFile = items[0].json;\nconst saleCtx = $node['Format Sale Row'].json;\nconst content = Buffer.from(sprintFile.content || '', 'base64').toString('utf-8');\nconst activeMatch = content.match(/Active launch:\\s*([\\w-]+)/i);\nconst activeSlug = activeMatch ? activeMatch[1] : null;\nif (!activeSlug || activeSlug !== saleCtx.product_slug) {\n  return [{ json: { skip: true, reason: 'no active launch matching product' } }];\n}\n// Find the launch-day counter line and bump it.\nconst updated = content.replace(/(Launch-day sales:\\s*)(\\d+)/, (_, p, n) => p + (parseInt(n, 10) + 1));\nreturn [{\n  json: {\n    skip: false,\n    sha: sprintFile.sha,\n    new_content_b64: Buffer.from(updated).toString('base64')\n  }\n}];"
+      },
+      "id": "27964649-a4c5-42f3-897d-a73786824215",
+      "name": "Maybe Increment Launch Counter",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2660, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {"caseSensitive": true, "leftValue": "", "typeValidation": "loose"},
+          "conditions": [
+            {
+              "id": "skip-gate",
+              "leftValue": "={{ $json.skip }}",
+              "rightValue": false,
+              "operator": {"type": "boolean", "operation": "equals"}
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "644f6fab-d241-47f3-ab0b-b85870faf548",
+      "name": "IF — Active Launch Match?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [2880, 400]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "https://api.github.com/repos/pinohu/digitalproducts/contents/10-execution-sprints/current-sprint.md",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"chore(sprint): increment launch-day counter\",\n  \"content\": \"{{ $json.new_content_b64 }}\",\n  \"sha\": \"{{ $json.sha }}\",\n  \"branch\": \"main\"\n}",
+        "options": {}
+      },
+      "id": "17acdf11-40cb-47e8-bc27-1cfbe25faf8f",
+      "name": "GitHub — Commit Sprint Update",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [3100, 400],
+      "credentials": {
+        "httpHeaderAuth": {"id": "REPLACE_ME", "name": "GitHub PAT (Bearer)"}
+      }
+    }
+  ],
+  "connections": {
+    "Webhook — Gumroad Purchase": {
+      "main": [[{"node": "Normalize Payload", "type": "main", "index": 0}]]
+    },
+    "Normalize Payload": {
+      "main": [[{"node": "IF — Real Purchase?", "type": "main", "index": 0}]]
+    },
+    "IF — Real Purchase?": {
+      "main": [
+        [{"node": "Format Sale Row", "type": "main", "index": 0}],
+        [{"node": "Log Test Purchase", "type": "main", "index": 0}]
+      ]
+    },
+    "Format Sale Row": {
+      "main": [[{"node": "GitHub — Read Product File", "type": "main", "index": 0}]]
+    },
+    "GitHub — Read Product File": {
+      "main": [[{"node": "GitHub — Append Sale Row", "type": "main", "index": 0}]]
+    },
+    "GitHub — Append Sale Row": {
+      "main": [[{"node": "Slack — Sale Notification", "type": "main", "index": 0}]]
+    },
+    "Slack — Sale Notification": {
+      "main": [[{"node": "Email Tool — Tag Buyer", "type": "main", "index": 0}]]
+    },
+    "Email Tool — Tag Buyer": {
+      "main": [[{"node": "Gumroad — Lookup Buyer History", "type": "main", "index": 0}]]
+    },
+    "Gumroad — Lookup Buyer History": {
+      "main": [[
+        {"node": "IF — Repeat Buyer?", "type": "main", "index": 0},
+        {"node": "GitHub — Read Current Sprint", "type": "main", "index": 0}
+      ]]
+    },
+    "IF — Repeat Buyer?": {
+      "main": [
+        [{"node": "Tag — High-LTV Cohort", "type": "main", "index": 0}],
+        []
+      ]
+    },
+    "GitHub — Read Current Sprint": {
+      "main": [[{"node": "Maybe Increment Launch Counter", "type": "main", "index": 0}]]
+    },
+    "Maybe Increment Launch Counter": {
+      "main": [[{"node": "IF — Active Launch Match?", "type": "main", "index": 0}]]
+    },
+    "IF — Active Launch Match?": {
+      "main": [
+        [{"node": "GitHub — Commit Sprint Update", "type": "main", "index": 0}],
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {"executionOrder": "v1"},
+  "versionId": "f25fa397-99dd-462b-8e81-69c8ae0fea42",
+  "id": "post-purchase-automation",
+  "meta": {"templateCredsSetupCompleted": false},
+  "tags": []
+}
