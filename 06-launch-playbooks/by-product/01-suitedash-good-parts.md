@@ -3,9 +3,11 @@
 **Launch date:** 2026-05-20 (Day 0)
 **Founding price window:** $49 for first 50 buyers OR 7 days, whichever first
 **Public price after:** $97
-**Primary platform:** LinkedIn
-**Secondary platforms:** Dynasty Empire newsletter, r/SuiteDash, AppSumo Plus Slack, SuiteDash FB group (where rules permit)
+**Primary distribution channels (UPDATED 2026-05-08):** YouTube comment seeding (Mike Lambert / SuiteDash channel) · G2 + Capterra Q&A · AppSumo LTD Facebook groups · Upwork productized service listing · Comparison-content affiliates · Reddit (r/Entrepreneur, r/agency, r/smallbusiness, r/ClientPortal)
+**Secondary channels:** Dynasty Empire newsletter, ikeohu.com long-form, LinkedIn (credibility documentation only — NOT primary; see findings below)
 **Goal:** 50 paid customers by Day 14 post-launch (2026-06-03), at least 3 written testimonials by Day 30
+
+> ⚠️ **Channel-mix update (2026-05-08):** A buyer-density audit (see `/01-market-research/by-product/01-suitedash-good-parts/distribution-findings.md`) found that LinkedIn is the wrong primary channel for THIS product's audience — SuiteDash company LinkedIn page has 381 followers and the founder has ~58 visible connections. Buyers concentrate on YouTube tutorial channels, G2/Capterra Q&A, and AppSumo LTD Facebook groups instead. The dated playbook below preserves the LinkedIn cadence (LinkedIn still serves credibility documentation for Dynasty Empire's broader audience), but the operational distribution mix is in `/06-launch-playbooks/by-product/01-suitedash-good-parts-watering-holes.md`. **Read that file alongside this one.**
 
 ---
 

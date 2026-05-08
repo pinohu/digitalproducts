@@ -78,6 +78,22 @@ The Rule of One: pick one platform where the buyer hangs out, master it, then ex
 - ❌ Try to grow on every platform simultaneously — pick one primary
 - ❌ Buy followers / engagement — destroys algorithmic trust
 - ❌ Outsource your voice — content from a ghostwriter reads as content from a ghostwriter
+- ❌ Apply this system-default to every product without auditing — buyer density varies by product (see "Per-Product Override" below)
+
+## Per-Product Override (Added 2026-05-08)
+
+This file describes the **system default** for Dynasty's content distribution. The default is LinkedIn-primary because most Dynasty audiences (UX research portfolio, MSEAM curriculum, ikeohu.com authority site, operator strategy content) actually concentrate on LinkedIn.
+
+But not every product's buyer audience is on LinkedIn. Before locking the launch playbook for a new product, run a **buyer-density audit**:
+
+1. Count actual followers/members where the audience theoretically gathers (LinkedIn, Twitter, niche FB groups, in-app communities, review platforms)
+2. Compare densities. If LinkedIn density is 10x the next-best channel, it's primary. If it's 1x or below, it's not.
+3. Document findings in `/01-market-research/by-product/<slug>/distribution-findings.md`
+4. If the audit overrides the LinkedIn-primary default, write a watering-holes addendum at `/06-launch-playbooks/by-product/<slug>-watering-holes.md`
+
+**First product to use the override:** *The Good Parts of SuiteDash* — SuiteDash company LinkedIn page has 381 followers; AppSumo LTD audience and YouTube tutorial-channel commenters are an order of magnitude denser. Primary distribution mix shifted to YouTube comment seeding · G2/Capterra Q&A · AppSumo LTD FB groups · Upwork productized service · comparison-content affiliates · Reddit. LinkedIn stays as secondary credibility channel. See `/01-market-research/by-product/01-suitedash-good-parts/distribution-findings.md`.
+
+Channel playbooks for the override channels: `/07-traffic-engine/youtube-comments-playbook.md`, `/07-traffic-engine/g2-capterra-qa-playbook.md`.
 
 ## The Quarterly Review
 

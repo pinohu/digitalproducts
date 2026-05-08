@@ -1,10 +1,11 @@
 # Product 01 — The Good Parts of SuiteDash
 
-> *Status:* **Ready to ship** — content complete, pre-publish polish phase
+> *Status:* **Ready to ship** — content complete, pre-publish polish + distribution-channel setup in progress
 > *Target ship:* 2026-05-20 (Day 0 of 14-day launch window)
 > *Source:* SuiteDash repo (existing accumulated knowledge)
 > *Price:* $49 founding (first 50 buyers / 7 days), $97 after
-> *Platform:* Gumroad
+> *Productized variant:* $97 (Upwork — PDF + 30-min Q&A call); see `./upwork-productized-listing.md`
+> *Platform:* Gumroad (primary), Upwork (productized variant)
 
 ## One-Sentence Pitch
 
@@ -85,9 +86,12 @@ After ship:
 ## Related Files
 
 - Validation: `/01-market-research/by-product/01-suitedash-good-parts/validation.md`
+- **Distribution findings: `/01-market-research/by-product/01-suitedash-good-parts/distribution-findings.md`** *(NEW 2026-05-08 — channel-mix audit, LinkedIn density problem, watering hole rationale)*
 - Offer: `/02-offers/by-product/01-suitedash-good-parts.md`
 - Sales page: `/04-sales-pages/by-product/01-suitedash-good-parts.md`
 - Email workflow: `/05-email-workflows/by-product/01-suitedash-good-parts/` (6 email drafts)
-- Launch playbook: `/06-launch-playbooks/by-product/01-suitedash-good-parts.md`
+- Launch playbook (calendar): `/06-launch-playbooks/by-product/01-suitedash-good-parts.md`
+- **Launch playbook (watering holes): `/06-launch-playbooks/by-product/01-suitedash-good-parts-watering-holes.md`** *(NEW 2026-05-08 — distribution channel mix; read alongside the dated playbook)*
+- **Upwork productized listing: `./upwork-productized-listing.md`** *(NEW 2026-05-08 — $97 PDF + 30-min Q&A variant)*
 - Analytics: `/analytics/by-product/01-suitedash-good-parts.md`
 - Sprint: `/10-execution-sprints/current-sprint.md`

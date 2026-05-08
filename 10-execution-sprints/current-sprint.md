@@ -35,12 +35,14 @@ Ship "The Good Parts of SuiteDash" — $49 PDF + 3 bonuses — live on Gumroad w
 | 10 | Sales page draft at `/04-sales-pages/by-product/01-suitedash-good-parts.md` | ✅ **Done** — 12-section sales page with 3 headline candidates, full bonus stack, 90-Minute Guarantee, 10 FAQs |
 | 11 | Email sequences drafted (6 post-purchase + launch sequence references) | ✅ **Done** — six post-purchase emails in `/05-email-workflows/by-product/01-suitedash-good-parts/`; launch playbook with daily subjects in `/06-launch-playbooks/by-product/01-suitedash-good-parts.md` |
 
-## Days 12–13: Pre-Launch
+## Days 12–13: Pre-Launch (Distribution + Packaging)
 
 | Day | Tasks | Status |
 |---|---|---|
 | 12 | Run pre-launch checklist; package PDFs; design cover art; upload to Gumroad; wire up email workflows | Pending |
+| 12 | **Distribution-channel setup** (per `01-suitedash-good-parts-watering-holes.md`): YouTube profile bio updated · G2 + Capterra reviewer accounts verified · 3 AppSumo LTD FB groups joined and rules saved · Upwork productized listing submitted for review (1–3 day approval) · 5 comparison-content affiliate emails drafted with personalization | Pending |
 | 13 | Recruit 3+ beta testers, collect testimonials; final test purchase end-to-end | Pending |
+| 13 | **YouTube comment seeding starts (Day -7)**: 2 comments on Mike Lambert videos using scaffolds from `/shared-assets/swipe-files/youtube-comment-scaffolds.md`; G2 + Capterra Q&A seeding starts (1 each) | Pending |
 
 ## Day 14: Launch
 
@@ -61,6 +63,9 @@ Ship "The Good Parts of SuiteDash" — $49 PDF + 3 bonuses — live on Gumroad w
 ### Day 12 — 2026-05-17
 > **Up next.** Pre-launch checklist run-through. Markdown → PDF export for core + 3 bonuses. Cover art design. Gumroad upload. Email workflows wired up in Gumroad. Test purchase.
 
+### Mid-Sprint Update — 2026-05-08 (Channel-Mix Audit)
+> Buyer-density audit completed: SuiteDash company LinkedIn = 381 followers, founder ~58 connections; G2/Capterra has 1,200+ reviews; AppSumo LTD audience is the literal ICP. Verdict: pivot LinkedIn from primary to secondary for THIS product. Created six new files: `distribution-findings.md`, `01-suitedash-good-parts-watering-holes.md` (launch playbook addendum), `youtube-comments-playbook.md`, `g2-capterra-qa-playbook.md`, `youtube-comment-scaffolds.md`, `comparison-content-affiliate-pitch.md`, `upwork-productized-listing.md`. Updated launch playbook header + sales page (G2/Capterra ambient social proof + Sensei-tier FAQ anchor). LinkedIn cadence preserved in dated playbook for credibility documentation; primary acquisition shifts to YouTube comments + G2/Capterra Q&A + AppSumo LTD FB groups + Upwork productized listing + comparison-content affiliates + Reddit. The dated launch playbook still drives WHEN; the watering-holes addendum drives WHERE.
+
 ---
 
 ## Blockers
@@ -75,9 +80,16 @@ Ship "The Good Parts of SuiteDash" — $49 PDF + 3 bonuses — live on Gumroad w
 
 - Source material: SuiteDash repo (existing accumulated knowledge)
 - Validation worksheet: `/01-market-research/by-product/01-suitedash-good-parts/validation.md` ✅
+- **Distribution findings: `/01-market-research/by-product/01-suitedash-good-parts/distribution-findings.md` ✅ (NEW 2026-05-08)**
 - Offer construction: `/02-offers/by-product/01-suitedash-good-parts.md` ✅
 - Product folder: `/03-products/01-suitedash-good-parts/` ✅ (manuscript + bonuses)
-- Sales page: `/04-sales-pages/by-product/01-suitedash-good-parts.md` ✅
+- **Upwork productized listing: `/03-products/01-suitedash-good-parts/upwork-productized-listing.md` ✅ (NEW 2026-05-08)**
+- Sales page: `/04-sales-pages/by-product/01-suitedash-good-parts.md` ✅ (updated 2026-05-08 with G2/Capterra social proof + Sensei tier anchor)
 - Email workflow: `/05-email-workflows/by-product/01-suitedash-good-parts/` ✅ (6 emails drafted)
-- Launch playbook: `/06-launch-playbooks/by-product/01-suitedash-good-parts.md` ✅
+- Launch playbook (calendar): `/06-launch-playbooks/by-product/01-suitedash-good-parts.md` ✅ (header updated 2026-05-08)
+- **Launch playbook (watering holes): `/06-launch-playbooks/by-product/01-suitedash-good-parts-watering-holes.md` ✅ (NEW 2026-05-08)**
+- **YouTube comments playbook: `/07-traffic-engine/youtube-comments-playbook.md` ✅ (NEW 2026-05-08)**
+- **G2/Capterra Q&A playbook: `/07-traffic-engine/g2-capterra-qa-playbook.md` ✅ (NEW 2026-05-08)**
+- **YouTube comment scaffolds: `/shared-assets/swipe-files/youtube-comment-scaffolds.md` ✅ (NEW 2026-05-08)**
+- **Comparison-content affiliate email: `/shared-assets/swipe-files/comparison-content-affiliate-pitch.md` ✅ (NEW 2026-05-08)**
 - Analytics: `/analytics/by-product/01-suitedash-good-parts.md` ✅

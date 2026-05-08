@@ -76,6 +76,8 @@ I've deployed SuiteDash across PA CROP, ImmigrationSmarts, and operational layer
 
 I built this PDF because I watched the same conversation play out in the SuiteDash Facebook group, the AppSumo Q&A, and r/SuiteDash for 18 months: technically capable operators sitting on dormant LTDs, asking variants of the same question — *"where do I even start?"*
 
+SuiteDash itself has 1,200+ reviews across G2 and Capterra averaging 4.8 stars — the platform isn't the problem. The deployment is the problem. This PDF is the document that compresses your deployment from 40 hours to 90 minutes.
+
 The answer is the seven modules that matter, the twelve to skip, and the configuration order that prevents 80% of common rebuilds. Once you have those, the platform is fine.
 
 This PDF is the document I wish I had two years ago. It's also the document I now hand to every new client before we start a SuiteDash setup engagement — because it eliminates 80% of the friction in the first day.
@@ -180,8 +182,8 @@ A: Yes. Chapter 4 and Bonus 1 walk through the configuration order — you can u
 **Q: How is this different from SuiteDash's official onboarding videos?**
 A: The official videos walk you through every module in feature order. This walks you through the 7 modules that matter in deployment order, with explicit instructions to skip the other 12. The official videos are exhaustive; this is opinionated.
 
-**Q: How is this different from a $1,500 SuiteDash agency setup?**
-A: A done-for-you setup runs the protocol on your tenant. This PDF teaches you the protocol so you can run it yourself in 90 minutes for $49. If you want done-for-you, that's the next ladder rung — and most operators don't need it.
+**Q: How is this different from a $400+ SuiteDash agency setup?**
+A: SuiteDash's Sensei Certified Agency Partners charge $125/hr (Synchronized Consulting), $400+ for setup packages (OBI Services), or $880+ for dedicated staff arrangements. They run the protocol on your tenant for you. This PDF teaches you the protocol so you can run it yourself in 90 minutes for $49. If you want done-for-you, the Sensei tier is the right next ladder rung — but most operators don't need it. The patterns in this PDF are what they'd configure first.
 
 **Q: How long does it take to read?**
 A: ~60 minutes to read. ~90 minutes to implement. Plan for a 2.5-hour focused block.

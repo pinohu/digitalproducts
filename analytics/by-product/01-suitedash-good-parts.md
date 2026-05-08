@@ -53,15 +53,19 @@ KPI tracker scaffold. Empty rows ready to fill in post-launch. Update daily duri
 
 ## Top-of-Funnel Source Attribution
 
-Track where buyers came from. Use Gumroad's referrer + UTM parameters on every link.
+Track where buyers came from. Use Gumroad's referrer + UTM parameters on every link. Channel list updated 2026-05-08 to match the new watering-hole mix (see `/06-launch-playbooks/by-product/01-suitedash-good-parts-watering-holes.md`).
 
 | Source | Page Views | Sales | Conv. Rate | Revenue | EPC | Notes |
 |---|---:|---:|---:|---:|---:|---|
-| LinkedIn (organic posts) | | | | | | |
+| YouTube comments (Mike Lambert / SuiteDash channel) | | | | | | |
+| G2 Q&A | | | | | | |
+| Capterra Q&A | | | | | | |
+| AppSumo LTD FB groups (3 groups) | | | | | | |
+| Upwork productized listing | | | | | | |
+| Comparison-content affiliates (Ahsuite et al.) | | | | | | |
+| Reddit (r/Entrepreneur, r/agency, r/smallbusiness, r/ClientPortal) | | | | | | |
 | Newsletter / Beehiiv | | | | | | |
-| r/SuiteDash | | | | | | |
-| AppSumo Plus Slack | | | | | | |
-| SuiteDash FB group | | | | | | |
+| LinkedIn (secondary — credibility documentation) | | | | | | |
 | Direct DMs | | | | | | |
 | Direct / dark social | | | | | | |
 | Other | | | | | | |

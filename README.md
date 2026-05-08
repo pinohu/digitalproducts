@@ -126,7 +126,8 @@ Iteration (Claude-assisted)
 |---|---|
 | Repo created | 2026-05-06 |
 | Framework version | v1.0 |
-| Active sprint | The Good Parts of SuiteDash (Day 1 of 14) |
+| Active sprint | The Good Parts of SuiteDash (content complete; pre-launch packaging + distribution setup in progress) |
+| Last update | 2026-05-08 — channel-mix audit completed; LinkedIn demoted from primary to secondary for this product (see [`/01-market-research/by-product/01-suitedash-good-parts/distribution-findings.md`](./01-market-research/by-product/01-suitedash-good-parts/distribution-findings.md)). 7 new files added: distribution findings, watering-holes addendum, YouTube comments playbook, G2/Capterra Q&A playbook, YouTube comment scaffolds, comparison-content affiliate pitch, Upwork productized listing. |
 | Idea backlog size | TBD — first mining pass pending |
 | Products live | 0 |
 | Products shipped (cumulative) | 0 |
