@@ -11,6 +11,7 @@ Python scripts that automate the highest-leverage parts of the digital products 
 | [`trends_checker.py`](./trends_checker.py) | Check Google Trends trajectory for candidate keywords | Per idea (validation phase) |
 | [`product_bootstrapper.py`](./product_bootstrapper.py) | Scaffold a new product folder with the standard structure | Per new product |
 | [`dpops.py`](./dpops.py) | Unified `dpops <subcommand>` wrapper around all four scripts | As needed |
+| [`appsumo_readonly_probe.py`](./appsumo_readonly_probe.py) | GET-only connector spike for API-backed AppSumo tools and guarded read-only surface checks | Per integration check |
 | [`verify_tools.py`](./verify_tools.py) | Offline readiness check for dependencies, config, scripts, and secrets | After setup / before n8n promotion |
 
 ## Setup

@@ -1,0 +1,117 @@
+high_attention_surfaces:
+  - SuiteDash
+  - Activepieces
+  - Boost.space
+  - KonnectzIT
+  - Albato
+  - Formaloo
+  - AITable.ai
+  - Emailit
+  - Brilliant Directories
+
+capability_groups:
+  automation_backbone:
+    primary_outcomes:
+      - connect tools into repeatable workflows
+      - reduce manual browser and admin work
+    primary_tools:
+      - Activepieces
+      - Boost.space
+      - KonnectzIT
+      - Albato
+      - PROCESIO
+      - TaskMagic
+      - RTILA
+    supporting_tools:
+      - Robomotion RPA
+      - ZeroWork
+      - Cheat Layer
+  crm_and_service_delivery:
+    primary_outcomes:
+      - run client onboarding, delivery, invoicing, and reporting
+      - create durable client portals and operating hubs
+    primary_tools:
+      - SuiteDash
+      - Agiled
+      - Flowlu
+      - FuseBase
+      - Heybase
+      - Crove
+      - Documentero
+  lead_generation_and_outreach:
+    primary_outcomes:
+      - find prospects
+      - enrich leads
+      - route leads into outreach and follow-up
+    primary_tools:
+      - Google Maps Scraper
+      - LeadRocks
+      - Clodura.AI
+      - BrandNav
+      - SalesNexus
+      - Reoon Email Verifier
+      - Acumbamail
+      - Emailit
+  directory_and_local_presence:
+    primary_outcomes:
+      - launch niche directories
+      - capture and route partner leads
+      - monetize local categories
+    primary_tools:
+      - Brilliant Directories
+      - Directorist
+      - CubeWP
+      - Microthemer
+      - ElementsKit
+      - Formaloo
+      - SuiteDash
+  authority_and_content:
+    primary_outcomes:
+      - research, write, publish, and repurpose authority content
+      - monetize traffic through affiliates or offer capture
+    primary_tools:
+      - WriterZen
+      - NeuronWriter
+      - Katteb
+      - WordHero
+      - Story Chief
+      - WPAutoBlog
+      - Missinglettr
+  content_repurposing_and_media:
+    primary_outcomes:
+      - create video, audio, demos, and social-ready media
+      - turn long-form source material into reusable assets
+    primary_tools:
+      - FlexClip
+      - InVideo Studio
+      - Zebracat
+      - Minvo
+      - Fliki
+      - Publitio
+      - SUPERMACHINE
+      - Pixelied
+  ai_agents_and_chatbots:
+    primary_outcomes:
+      - deploy support bots, intake agents, and voice workflows
+      - turn knowledge bases into guided buyer interactions
+    primary_tools:
+      - Chatbase
+      - Insighto.ai
+      - Thoughtly
+      - Pickaxe
+      - Straico
+      - Triplo AI
+      - AgenticFlow
+  analytics_and_optimization:
+    primary_outcomes:
+      - measure site behavior
+      - audit conversion and SEO performance
+      - produce operator and client reporting
+    primary_tools:
+      - Plerdy
+      - TruConversion
+      - Labrika
+      - Screpy
+      - OWOX BI
+      - Two Minute Reports
+      - BackupSheep

@@ -1,0 +1,39 @@
+{
+  "name": "digitalproducts-governance",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Governance, quality, accessibility, and observability tooling for digitalproducts.",
+  "type": "module",
+  "scripts": {
+    "preview:site": "http-server ./08-platforms/vercel-sites/suitedash-good-parts-preview -p 4173 -c-1",
+    "preview:a11y": "http-server ./08-platforms/vercel-sites/suitedash-good-parts-preview -p 4174 -c-1",
+    "preview:lighthouse": "http-server ./08-platforms/vercel-sites/suitedash-good-parts-preview -p 4175 -c-1",
+    "quality:setup": "playwright install --with-deps chromium && puppeteer browsers install chrome",
+    "storybook": "storybook dev -p 6006",
+    "storybook:build": "storybook build",
+    "test:e2e": "playwright test",
+    "test:a11y": "start-server-and-test preview:a11y http://127.0.0.1:4174 \"pa11y-ci --config ./.pa11yci.json\"",
+    "test:lighthouse": "lhci autorun --config ./.lighthouserc.json",
+    "quality:all": "npm run storybook:build && npm run test:e2e && npm run test:a11y && npm run test:lighthouse",
+    "policy:release": "node ./scripts/check-release-ready.mjs",
+    "observability:summary": "node ./scripts/print-status-summary.mjs",
+    "changeset": "changeset",
+    "changeset:status": "changeset status --verbose",
+    "changeset:version": "changeset version"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
+    "@changesets/cli": "^2.29.5",
+    "@lhci/cli": "^0.15.1",
+    "@playwright/test": "^1.53.0",
+    "@storybook/addon-a11y": "^8.6.14",
+    "@storybook/addon-essentials": "^8.6.14",
+    "@storybook/html-vite": "^8.6.14",
+    "axe-core": "^4.10.2",
+    "http-server": "^14.1.1",
+    "pa11y": "^9.1.1",
+    "pa11y-ci": "^4.0.1",
+    "start-server-and-test": "^2.0.10",
+    "storybook": "^8.6.14"
+  }
+}

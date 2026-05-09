@@ -1,0 +1,31 @@
+id: WF-20260508-001
+created_at: '2026-05-08T13:20:51Z'
+status: backlog
+product_family: client-portal-service-delivery-os
+target_product: The Good Parts of SuiteDash
+buyer: technically capable SuiteDash owners running client delivery
+pain: SuiteDash is already purchased but the onboarding and delivery workflow is still half-configured
+promised_outcome: a truthful tripwire-to-toolkit-to-service ladder for the current SuiteDash product
+stage: iteration-and-scale
+owner_agent: Chief of Staff
+implementation_agent: Codex
+repo_paths:
+- 02-offers/by-product/01-suitedash-good-parts.md
+- 04-sales-pages/by-product/01-suitedash-good-parts.md
+- 06-launch-playbooks/by-product/01-suitedash-good-parts.md
+- 09-iteration-and-scale/by-product/01-suitedash-good-parts.md
+dependencies:
+- DIG-1
+- DIG-2
+acceptance_criteria:
+- SuiteDash ladder is explicit across offer, sales, launch, and iteration artifacts
+- Next-rung toolkit and managed-service path stay truthful and aligned
+review_checklist:
+- One buyer
+- One pain
+- One promise
+- Upsell path exists
+- Repo truth aligned with current sprint
+next_codex_prompt: Tighten the SuiteDash ladder so the trust tripwire cleanly points
+  to the next-rung toolkit, setup sprint, and managed service without inventing proof
+  that does not exist yet.

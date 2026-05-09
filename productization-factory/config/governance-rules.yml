@@ -1,0 +1,42 @@
+governance_rules:
+  core_rules:
+    - Do not create one product per tool unless a tool has standalone buyer demand outside the owned portfolio.
+    - Productize outcomes, workflows, and painful jobs-to-be-done.
+    - Every product must define one buyer, one pain, one promise, and one primary outcome.
+    - Every product must include an upsell path into a toolkit, setup sprint, or managed service.
+    - Every product must have a post-purchase workflow before it is considered launch-ready.
+    - No sprint should carry more than one primary product family without explicit override.
+    - Repo truth beats chat memory. If the repo and memory differ, update the repo.
+  launch_gates:
+    market_clarity:
+      - specific buyer named
+      - urgent pain named
+      - targeting path exists
+      - proof-of-demand path exists
+    offer_quality:
+      - one outcome
+      - one promise
+      - pricing ladder
+      - guarantee or risk reversal
+      - bonus logic
+    product_completeness:
+      - core deliverable exists
+      - at least one bonus exists
+      - implementation SOP exists
+      - final CTA exists
+    sales_readiness:
+      - sales page exists
+      - FAQ exists
+      - founding price exists
+      - proof plan exists
+    workflow_readiness:
+      - welcome email exists
+      - quick-win email exists
+      - case-study or use-case email exists
+      - upsell email exists
+      - testimonial request email exists
+    service_monetization:
+      - setup sprint defined
+      - managed service defined
+      - pricing defined
+      - onboarding path defined

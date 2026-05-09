@@ -1,0 +1,73 @@
+system_roles:
+  paperclip:
+    role: business_operating_layer
+    responsibilities:
+      - prioritize product families
+      - create and track work orders
+      - manage sprint sequencing
+      - enforce governance gates
+  hermes:
+    role: persistent_memory_and_coordination
+    responsibilities:
+      - maintain tool-capability memory
+      - maintain product-family memory
+      - record decisions
+      - extract reusable skills
+      - prepare Codex-ready prompts
+  codex:
+    role: repo_implementation_layer
+    responsibilities:
+      - edit files
+      - create scripts and templates
+      - run validation and tests
+      - keep repo truth current
+
+paperclip_company:
+  name: Digital Products Operating System
+  id: "4b02078e-90d2-42ed-95d5-c5a54b7d3a16"
+  issue_prefix: DIG
+
+managed_agents:
+  chief_of_staff:
+    id: "95c21e7a-7117-4b68-b73c-54666e9091ad"
+    department: portfolio_strategy
+    focus: roadmap decomposition, sprint coordination, work-order ownership
+  market_research_lead:
+    id: "a3969520-53ff-40e2-b37e-c7f26ee51118"
+    department: market_research
+    focus: starving-crowd validation, buyer pain, proof signals
+  offer_engineer:
+    id: "44b9e7c1-f999-4a14-8570-20bf33f1371a"
+    department: offer_engineering
+    focus: pricing, bonuses, guarantees, ladder logic
+  product_builder:
+    id: "393e6eb4-69e6-4e07-b2b6-7a4e21ab2d6f"
+    department: product_build
+    focus: playbooks, deliverables, bonus assets
+  funnel_and_launch_ops:
+    id: "183b8891-275c-4205-9f84-c163da871411"
+    department: sales_page_and_launch
+    focus: sales pages, email workflows, launch assets
+  automation_engineer:
+    id: "2a96ba46-e48e-42c9-a6a7-dacabd994d88"
+    department: automation
+    focus: scripts, integration maps, n8n and Activepieces scaffolding
+  growth_analyst:
+    id: "4edee279-605d-4a92-b992-beeceb880c5c"
+    department: analytics
+    focus: KPIs, platform readiness, measurement
+  quality_gatekeeper:
+    id: "e91b4fd4-6223-4513-a8ff-f0d002445830"
+    department: qa_governance
+    focus: release evidence, CI, quality gates
+  accessibility_auditor:
+    id: "4b57693f-bf62-42d0-8da1-471ed47ab747"
+    department: qa_governance
+    focus: WCAG 2.2 AA, usability, mobile review
+  release_governor:
+    id: "02a79e25-e730-4917-80f3-568f7458b2ea"
+    department: qa_governance
+    focus: policy truth, shipped-gate discipline
+  browser_operations_lead:
+    department: browser_operations
+    focus: browser-first SaaS execution where APIs are missing

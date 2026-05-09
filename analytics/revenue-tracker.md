@@ -16,7 +16,7 @@ Monthly revenue snapshot. Update on the last Friday of every month.
 
 | Product | Launch Date | Total Sales | Total Revenue | AOV | Refund Rate |
 |---|---|---|---|---|---|
-| 01-suitedash-good-parts | TBD | | | | |
+| 01-suitedash-good-parts | 2026-05-20 (target) | | | | |
 | 02-pdf-slot-2 | | | | | |
 | 03-pdf-slot-3 | | | | | |
 | 04-pdf-slot-4 | | | | | |

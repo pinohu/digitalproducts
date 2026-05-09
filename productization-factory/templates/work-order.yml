@@ -1,0 +1,27 @@
+id: WF-YYYYMMDD-001
+created_at: 2026-05-08T00:00:00Z
+status: backlog
+product_family: client-portal-service-delivery-os
+target_product: The Good Parts of SuiteDash
+buyer: service-business operator
+pain: onboarding and delivery are fragmented
+promised_outcome: a clean client portal and onboarding workflow
+stage: offer-engineering
+owner_agent: Chief of Staff
+implementation_agent: Codex
+repo_paths:
+  - 02-offers/by-product/01-suitedash-good-parts.md
+dependencies:
+  - DIG-3
+  - DIG-4
+acceptance_criteria:
+  - Offer brief is updated
+  - Pricing ladder is explicit
+  - Bonus stack is explicit
+review_checklist:
+  - One buyer
+  - One pain
+  - One promise
+  - Upsell path exists
+next_codex_prompt: >
+  Update the offer brief and keep the repo truth aligned with the current sprint.

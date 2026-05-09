@@ -1,0 +1,30 @@
+id: WF-20260508-002
+created_at: '2026-05-08T13:21:06Z'
+status: active
+product_family: client-portal-service-delivery-os
+target_product: SuiteDash Operator Pack
+buyer: technically capable SuiteDash owners running client delivery
+pain: SuiteDash is already purchased but the onboarding and delivery workflow is still half-configured
+promised_outcome: a clear toolkit upsell that turns the tripwire into a real client-portal implementation ladder
+stage: offer-engineering
+owner_agent: Offer Engineer
+implementation_agent: Codex
+repo_paths:
+- 02-offers/by-product/01-suitedash-good-parts.md
+- 09-iteration-and-scale/by-product/01-suitedash-good-parts.md
+- productization-factory/reports/sprint-readiness-report.md
+dependencies:
+- DIG-1
+acceptance_criteria:
+- Operator Pack positioning is explicit as the natural toolkit upsell from the trust
+  tripwire
+- Pricing and included assets are consistent across factory and sprint docs
+review_checklist:
+- One buyer
+- One pain
+- One promise
+- Upsell path exists
+- Repo truth aligned with current sprint
+next_codex_prompt: Define the SuiteDash Operator Pack as the truthful next-rung toolkit
+  upsell so the current tripwire has a concrete ladder without pretending the launch
+  blockers are resolved.

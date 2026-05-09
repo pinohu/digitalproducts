@@ -6,7 +6,7 @@ Performance tracking. Where the numbers live. The single source of truth for "ho
 
 - [`revenue-tracker.md`](./revenue-tracker.md) — Monthly and per-product revenue tracking.
 - [`conversion-tracker.md`](./conversion-tracker.md) — Sales page conversion, email conversion, bundle conversion across products.
-- `by-product/<slug>.md` — Detailed per-product metrics, cumulative.
+- `by-product/<slug>.md` — Detailed per-product metrics, launch baselines, and 7-day / 30-day / 90-day review notes.
 
 ## What to Track (and What Not To)
 
@@ -27,10 +27,11 @@ Performance tracking. Where the numbers live. The single source of truth for "ho
 
 ## Cadence
 
-- **Weekly:** Glance at total revenue + new sales (5 min, Friday)
-- **Monthly:** Full review + update trackers (30 min, last Friday of month)
-- **Quarterly:** Strategic review + decisions about pricing, products, channels (2 hours)
-- **Annually:** Year-in-review + next-year planning (half day)
+- **7 days after launch:** Check traffic quality, conversion, support replies, refund signals, and the first concrete sales-page/channel changes.
+- **30 days after launch:** Update revenue/conversion trackers, decide pricing/tier/affiliate/next-channel actions, and capture testimonial outcomes.
+- **90 days after launch:** Run the strategic product review: optimize, bundle, create a variation, or promote the next product from the backlog.
+- **Monthly outside launch windows:** Full review + update trackers (30 min, last Friday of month).
+- **Annually:** Year-in-review + next-year planning (half day).
 
 ## Where the Data Comes From
 

@@ -1,0 +1,58 @@
+name: Release Governance
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "governance/**"
+      - ".changeset/**"
+      - ".github/workflows/release-governance.yml"
+      - "00-foundation/operator-system/**"
+
+permissions:
+  contents: read
+
+jobs:
+  release-gate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Show pending changesets if any
+        run: npx changeset status --verbose || echo "No pending changesets on this branch."
+
+      - name: Run local release-state validator
+        run: npm run policy:release
+
+      - name: Set up Open Policy Agent
+        uses: open-policy-agent/setup-opa@v2
+        with:
+          version: latest
+
+      - name: Enforce release policy via OPA
+        shell: bash
+        run: |
+          result="$(opa eval --format raw -d governance/policies -i governance/release-state.json "data.release.allow")"
+          if [ "$result" != "true" ]; then
+            echo "OPA release gate blocked."
+            opa eval --format pretty -d governance/policies -i governance/release-state.json "data.release.deny"
+            exit 1
+          fi
+
+      - name: Upload release-state snapshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-state
+          path: governance/release-state.json

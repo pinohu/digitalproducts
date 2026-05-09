@@ -46,6 +46,7 @@ SCRIPTS = [
     "reddit_miner.py",
     "trends_checker.py",
     "product_bootstrapper.py",
+    "appsumo_readonly_probe.py",
     "verify_tools.py",
 ]
 
@@ -61,6 +62,16 @@ EXPECTED_PATHS = [
 SECRET_GROUPS = {
     "Reddit mining": ["REDDIT_CLIENT_ID", "REDDIT_CLIENT_SECRET", "REDDIT_USER_AGENT"],
     "Claude extraction": ["ANTHROPIC_API_KEY"],
+    "AppSumo Agiled probe": ["AGILED_API_KEY"],
+    "AppSumo AITable probe": ["AITABLE_API_KEY"],
+    "AppSumo Emailit probe": ["EMAILIT_API_KEY"],
+    "AppSumo Late/Zernio probe": ["GETLATE_DEV_API_KEY"],
+    "AppSumo Formaloo probe": ["FORMALOO_API_KEY", "FORMALOO_API_SECRET"],
+    "AppSumo Flotiq probe": ["FLOTIQ_API_KEY"],
+    "AppSumo Certopus probe": ["CERTOPUS_API_KEY"],
+    "AppSumo Dadan probe": ["DADAN_API_KEY"],
+    "AppSumo Boost.space probe": ["BOOST_SPACE_API_KEY"],
+    "AppSumo Flowlu probe": ["FLOWLU_API_KEY"],
     "GitHub write automation": ["GITHUB_TOKEN", "GITHUB_REPO"],
     "n8n workflow API": ["N8N_BASE_URL", "N8N_API_KEY"],
     "Gumroad automation": ["GUMROAD_ACCESS_TOKEN"],

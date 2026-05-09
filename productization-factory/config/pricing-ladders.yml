@@ -1,0 +1,33 @@
+pricing_ladders:
+  standard_workflow_ladder:
+    description: Default ladder for workflow-based digital products and services.
+    stages:
+      founding_tripwire:
+        price_range_usd: "29-49"
+        promise: Fast practical win that builds trust and validates buyer pain.
+      public_tripwire:
+        price_range_usd: "49-97"
+        promise: Core workflow playbook with clearer packaging and positioning.
+      toolkit:
+        price_range_usd: "97-297"
+        promise: Templates, checklists, SOPs, and implementation assets.
+      bundle:
+        price_range_usd: "497-997"
+        promise: Multi-asset system bundling the strongest workflow components.
+      setup_sprint:
+        price_range_usd: "2500-10000"
+        promise: Done-with-you or done-for-you implementation in a fixed window.
+      managed_service_monthly:
+        price_range_usd: "500-3000"
+        promise: Ongoing operation, optimization, reporting, and support.
+  premium_b2b_ladder:
+    description: Higher-touch ladder for agency, consultant, and B2B operator buyers.
+    stages:
+      tripwire:
+        price_range_usd: "49-149"
+      toolkit:
+        price_range_usd: "197-497"
+      implementation:
+        price_range_usd: "5000-15000"
+      retainer:
+        price_range_usd: "1500-5000"

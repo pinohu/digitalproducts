@@ -1,0 +1,154 @@
+{
+  "name": "Flotiq Read-Only Health Check (Manual Draft)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual-trigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "repoPath",
+              "value": "/mnt/c/Users/ohu00/Desktop/digitalproducts"
+            },
+            {
+              "name": "python",
+              "value": "tools/.venv/bin/python"
+            },
+            {
+              "name": "envFile",
+              "value": "/mnt/c/Users/ohu00/Documents/.env"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-runtime-config",
+      "name": "Set Runtime Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ],
+      "notes": "Replace envFile with n8n credential/env injection before any scheduled run. Do not store API keys in workflow JSON."
+    },
+    {
+      "parameters": {
+        "command": "cd {{$json.repoPath}} && {{$json.python}} tools/appsumo_readonly_probe.py flotiq content-types --env-file {{$json.envFile}} --page-size 1 --summary-only --json"
+      },
+      "id": "flotiq-content-types-summary",
+      "name": "Flotiq Content Types Summary",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        460,
+        -100
+      ],
+      "notes": "GET-only content-type count/field summary. Do not emit raw schema/content payloads."
+    },
+    {
+      "parameters": {
+        "command": "cd {{$json.repoPath}} && {{$json.python}} tools/appsumo_readonly_probe.py flotiq media --env-file {{$json.envFile}} --page-size 1 --summary-only --json"
+      },
+      "id": "flotiq-media-summary",
+      "name": "Flotiq Media Summary",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        460,
+        100
+      ],
+      "notes": "GET-only media count smoke check. Do not emit media URLs or raw media records."
+    },
+    {
+      "parameters": {
+        "jsCode": "const banned = ['token','secret','api_key','authorization','password','email','url','webhook','body','sample'];\nreturn items.map((item) => {\n  const text = JSON.stringify(item.json);\n  const leaked = banned.filter((fragment) => text.toLowerCase().includes(fragment));\n  if (leaked.length) {\n    throw new Error(`Flotiq digest contains banned fragments: ${leaked.join(', ')}`);\n  }\n  return item;\n});"
+      },
+      "id": "redaction-guard",
+      "name": "Redaction Guard",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        0
+      ],
+      "notes": "Review and tune before real import. This draft intentionally favors false positives over leaking CMS data."
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set Runtime Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Runtime Config": {
+      "main": [
+        [
+          {
+            "node": "Flotiq Content Types Summary",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Flotiq Media Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Flotiq Content Types Summary": {
+      "main": [
+        [
+          {
+            "node": "Redaction Guard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Flotiq Media Summary": {
+      "main": [
+        [
+          {
+            "node": "Redaction Guard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "tags": [
+    {
+      "name": "draft"
+    },
+    {
+      "name": "manual-first"
+    },
+    {
+      "name": "read-only"
+    }
+  ]
+}

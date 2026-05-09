@@ -1,0 +1,246 @@
+{
+  "name": "AppSumo Read-Only Summary - Agiled + AITable (DRAFT, DISABLED)",
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "none",
+    "timezone": "America/New_York"
+  },
+  "meta": {
+    "repo_status": "draft-only; not created live by DIG-36",
+    "safety_class": "read-only, data-minimized",
+    "required_review": "manual notification-only run before cron or writeback"
+  },
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual-trigger",
+      "name": "Manual Trigger - Review First",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -760,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "run_mode",
+              "value": "manual_review"
+            },
+            {
+              "name": "paperclip_issue_id",
+              "value": "7d50a585-41ce-467f-a6ba-98afb3dc65cc"
+            },
+            {
+              "name": "repo_tools_dir",
+              "value": "/mnt/c/Users/ohu00/Desktop/digitalproducts/tools"
+            }
+          ],
+          "number": [
+            {
+              "name": "max_page_size",
+              "value": 25
+            }
+          ],
+          "boolean": [
+            {
+              "name": "emit_raw_records",
+              "value": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-runtime-config",
+      "name": "Set Runtime Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        -540,
+        0
+      ],
+      "notes": "Keep emit_raw_records=false. This workflow is summary-only."
+    },
+    {
+      "parameters": {
+        "command": "cd /mnt/c/Users/ohu00/Desktop/digitalproducts/tools && ./.venv/bin/python appsumo_readonly_probe.py agiled users --page-size 25 --summary-only --json"
+      },
+      "id": "agiled-users-summary",
+      "name": "Agiled Users Summary (GET only)",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        -220
+      ],
+      "notes": "Requires AGILED_API_KEY in n8n runtime env or credential-injected environment. Do not print raw records."
+    },
+    {
+      "parameters": {
+        "command": "cd /mnt/c/Users/ohu00/Desktop/digitalproducts/tools && ./.venv/bin/python appsumo_readonly_probe.py agiled projects --page-size 25 --summary-only --json"
+      },
+      "id": "agiled-projects-summary",
+      "name": "Agiled Projects Summary (GET only)",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        0
+      ],
+      "notes": "Low frequency only; Agiled can 429 repeated smoke checks."
+    },
+    {
+      "parameters": {
+        "command": "cd /mnt/c/Users/ohu00/Desktop/digitalproducts/tools && ./.venv/bin/python appsumo_readonly_probe.py aitable spaces --page-size 25 --summary-only --json"
+      },
+      "id": "aitable-spaces-summary",
+      "name": "AITable Spaces Summary (GET only)",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        220
+      ],
+      "notes": "Requires current AITABLE_API_KEY. DIG-35 found credential-source drift; verify n8n credential before host changes."
+    },
+    {
+      "parameters": {
+        "jsCode": "const allowed = ['platform', 'resource', 'record_count_visible', 'status_counts', 'visible_field_names', 'status_code', 'content_type'];\nreturn items.map((item) => {\n  let parsed = {};\n  const raw = item.json.stdout || item.json.data || item.json;\n  if (typeof raw === 'string') {\n    try { parsed = JSON.parse(raw); } catch (error) { parsed = { parse_error: String(error) }; }\n  } else {\n    parsed = raw;\n  }\n  const out = {};\n  for (const key of allowed) {\n    if (parsed[key] !== undefined) out[key] = parsed[key];\n  }\n  out.summary_time_utc = new Date().toISOString();\n  out.raw_records_emitted = false;\n  return { json: out };\n});"
+      },
+      "id": "normalize-results",
+      "name": "Normalize Data-Minimized Results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        60,
+        0
+      ],
+      "notes": "Drops sample/raw body and keeps only aggregate connector health fields."
+    },
+    {
+      "parameters": {
+        "jsCode": "const lines = ['# AppSumo read-only summary', '', `Generated: ${new Date().toISOString()}`, '', 'Safety: GET-only; raw CRM/datasheet records omitted.', ''];\nfor (const item of items) {\n  const j = item.json;\n  const status = j.status_code ? `HTTP ${j.status_code}` : 'status unknown';\n  const count = j.record_count_visible ?? 'N/A';\n  const buckets = j.status_counts && Object.keys(j.status_counts).length ? `; status buckets: ${JSON.stringify(j.status_counts)}` : '';\n  lines.push(`- ${j.platform || 'unknown'}/${j.resource || 'unknown'}: ${status}; visible count ${count}${buckets}`);\n}\nreturn [{ json: { digest_markdown: lines.join('\\n'), raw_records_emitted: false } }];"
+      },
+      "id": "build-digest",
+      "name": "Build Operator Digest",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        300,
+        0
+      ],
+      "notes": "Digest is safe for notification after manual review."
+    },
+    {
+      "parameters": {
+        "text": "={{$json.digest_markdown}}"
+      },
+      "id": "notify-operator-placeholder",
+      "name": "Notify Operator (configure credential)",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        540,
+        0
+      ],
+      "disabled": true,
+      "notes": "Replace with Email/Slack/Discord node after credential setup. Keep Paperclip/GitHub writeback disabled until a notification-only run is reviewed."
+    }
+  ],
+  "connections": {
+    "Manual Trigger - Review First": {
+      "main": [
+        [
+          {
+            "node": "Set Runtime Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Runtime Config": {
+      "main": [
+        [
+          {
+            "node": "Agiled Users Summary (GET only)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Agiled Projects Summary (GET only)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "AITable Spaces Summary (GET only)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agiled Users Summary (GET only)": {
+      "main": [
+        [
+          {
+            "node": "Normalize Data-Minimized Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agiled Projects Summary (GET only)": {
+      "main": [
+        [
+          {
+            "node": "Normalize Data-Minimized Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AITable Spaces Summary (GET only)": {
+      "main": [
+        [
+          {
+            "node": "Normalize Data-Minimized Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Data-Minimized Results": {
+      "main": [
+        [
+          {
+            "node": "Build Operator Digest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Operator Digest": {
+      "main": [
+        [
+          {
+            "node": "Notify Operator (configure credential)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "versionId": "draft-dig-36"
+}

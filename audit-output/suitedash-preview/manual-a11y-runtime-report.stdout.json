@@ -1,0 +1,1349 @@
+﻿{
+  "url": "http://127.0.0.1:4173/index.html",
+  "screenshots": {
+    "desktop": "C:\\Users\\ohu00\\Desktop\\digitalproducts\\audit-output\\suitedash-preview\\desktop-1280x900.png",
+    "mobile": "C:\\Users\\ohu00\\Desktop\\digitalproducts\\audit-output\\suitedash-preview\\mobile-390x844.png"
+  },
+  "consoleMessages": [],
+  "headings": [
+    {
+      "level": 1,
+      "text": "The 90-minute operator path through SuiteDash."
+    },
+    {
+      "level": 2,
+      "text": "SuiteDash is powerful, but the setup tax is real."
+    },
+    {
+      "level": 3,
+      "text": "You already paid for the tool."
+    },
+    {
+      "level": 3,
+      "text": "The docs do not solve sequencing."
+    },
+    {
+      "level": 3,
+      "text": "Version one should be narrow."
+    },
+    {
+      "level": 2,
+      "text": "A compact product stack built for action, not coursework."
+    },
+    {
+      "level": 3,
+      "text": "The Good Parts of SuiteDash"
+    },
+    {
+      "level": 3,
+      "text": "90-Minute SuiteDash Lock-In Protocol"
+    },
+    {
+      "level": 3,
+      "text": "7 SuiteDash Automation Recipes"
+    },
+    {
+      "level": 3,
+      "text": "The Kill List"
+    },
+    {
+      "level": 2,
+      "text": "The product is built to move one decision forward fast."
+    },
+    {
+      "level": 3,
+      "text": "Filter the platform"
+    },
+    {
+      "level": 3,
+      "text": "Pick the first workflow"
+    },
+    {
+      "level": 3,
+      "text": "Run the lock-in pass"
+    },
+    {
+      "level": 3,
+      "text": "Add the highest-payback automation"
+    },
+    {
+      "level": 2,
+      "text": "For operators who need compression, not hand-holding."
+    },
+    {
+      "level": 3,
+      "text": "Best fit"
+    },
+    {
+      "level": 3,
+      "text": "Not the promise"
+    },
+    {
+      "level": 2,
+      "text": "The preview is live. Production still needs the external switches flipped."
+    },
+    {
+      "level": 3,
+      "text": "Ready now"
+    },
+    {
+      "level": 3,
+      "text": "Still blocking production"
+    },
+    {
+      "level": 2,
+      "text": "Use this preview to approve the offer surface, then attach the real storefront."
+    }
+  ],
+  "landmarks": [
+    {
+      "tag": "header",
+      "id": null,
+      "label": null
+    },
+    {
+      "tag": "main",
+      "id": "main-content",
+      "label": null
+    },
+    {
+      "tag": "section",
+      "id": null,
+      "label": null
+    },
+    {
+      "tag": "article",
+      "id": null,
+      "label": null
+    },
+    {
+      "tag": "article",
+      "id": null,
+      "label": null
+    },
+    {
+      "tag": "article",
+      "id": null,
+      "label": null
+    },
+    {
+      "tag": "section",
+      "id": "stack",
+      "label": null
+    },
+    {
+      "tag": "article",
+      "id": null,
+      "label": null
+    },
+    {
+      "tag": "article",
+      "id": null,
+      "label": null
+    },
+    {
+      "tag": "article",
+      "id": null,
+      "label": null
+    },
+    {
+      "tag": "article",
+      "id": null,
+      "label": null
+    },
+    {
+      "tag": "section",
+      "id": null,
+      "label": null
+    },
+    {
+      "tag": "article",
+      "id": null,
+      "label": null
+    },
+    {
+      "tag": "article",
+      "id": null,
+      "label": null
+    },
+    {
+      "tag": "article",
+      "id": null,
+      "label": null
+    },
+    {
+      "tag": "article",
+      "id": null,
+      "label": null
+    },
+    {
+      "tag": "section",
+      "id": null,
+      "label": null
+    },
+    {
+      "tag": "article",
+      "id": null,
+      "label": null
+    },
+    {
+      "tag": "article",
+      "id": null,
+      "label": null
+    },
+    {
+      "tag": "section",
+      "id": "launch-status",
+      "label": null
+    },
+    {
+      "tag": "article",
+      "id": null,
+      "label": null
+    },
+    {
+      "tag": "article",
+      "id": null,
+      "label": null
+    },
+    {
+      "tag": "section",
+      "id": null,
+      "label": null
+    }
+  ],
+  "links": [
+    {
+      "tag": "a",
+      "text": "Skip to content",
+      "href": "#main-content",
+      "role": null,
+      "ariaDisabled": null,
+      "tabIndex": 0
+    },
+    {
+      "tag": "a",
+      "text": "Review launch status",
+      "href": "#launch-status",
+      "role": null,
+      "ariaDisabled": null,
+      "tabIndex": 0
+    },
+    {
+      "tag": "a",
+      "text": "See what is included",
+      "href": "#stack",
+      "role": null,
+      "ariaDisabled": null,
+      "tabIndex": 0
+    },
+    {
+      "tag": "main",
+      "text": "Why it exists\n            SuiteDash is powerful, but the setup tax is real.\n          \n          \n            \n              You already paid for the tool.\n              \n                The buyers for this product are not beginners. They are operators who already own\n                SuiteDash and want the shortest path to a working deployment.\n              \n            \n            \n              The docs do not solve sequencing.\n              \n                The hard part is not finding features. It is knowing what to configure first, what\n                to skip, and what order prevents rebuild loops.\n              \n            \n            \n              Version one should be narrow.\n              \n                This guide compresses the 20 percent of the platform that creates the clearest\n                early value for portals, intake, projects, files, billing, and automation.\n              \n            \n          \n        \n\n        \n          \n            What is included\n            A compact product stack built for action, not coursework.\n          \n          \n            \n              Core guide\n              The Good Parts of SuiteDash\n              \n                A focused PDF for technically capable owners who want the 90-minute path through\n                the modules that matter first.\n              \n              $197 standalone value\n            \n            \n              Bonus 1\n              90-Minute SuiteDash Lock-In Protocol\n              \n                A checklist for running the first setup pass without over-customizing the account.\n              \n              $97 standalone value\n            \n            \n              Bonus 2\n              7 SuiteDash Automation Recipes\n              \n                The first workflow templates to build after the manual path is clear.\n              \n              $197 standalone value\n            \n            \n              Bonus 3\n              The Kill List\n              \n                Twelve features to ignore until real volume and real workflow pressure make them\n                worth the complexity.\n              \n              $49 standalone value\n            \n          \n        \n\n        \n          \n            What the buyer gets\n            The product is built to move one decision forward fast.\n          \n          \n            \n              01\n              Filter the platform\n              Use the module map to separate signal from feature sprawl.\n            \n            \n              02\n              Pick the first workflow\n              Choose one operational path instead of configuring five at once.\n            \n            \n              03\n              Run the lock-in pass\n              Follow the sequence that reduces role, folder, and automation rework.\n            \n            \n              04\n              Add the highest-payback automation\n              Move from manual clarity to repeatable client operations.\n            \n          \n        \n\n        \n          \n            Positioning\n            For operators who need compression, not hand-holding.\n          \n          \n            \n              Best fit\n              \n                SuiteDash Pinnacle or lifetime buyers who still have a half-built setup\n                Agency operators, freelancers, and technical solopreneurs\n                Buyers who want faster setup decisions, not a full course\n              \n            \n            \n              Not the promise\n              \n                Not a feature-by-feature SuiteDash encyclopedia\n                Not a guarantee that every use case belongs inside SuiteDash\n                Not a live checkout page until storefront activation is complete\n              \n            \n          \n        \n\n        \n          \n            Launch status\n            The preview is live. Production still needs the external switches flipped.\n          \n          \n            \n              Ready now\n              \n                Manuscript drafted and packaged\n                Bonus files exported and zipped\n                Core visuals generated\n                Preview landing page deployed for review\n              \n            \n            \n              Still blocking production\n              \n                Gumroad product URL and checkout activation\n                Three real testimonials before public launch\n                Final live launch date and founding window timestamp\n                Connected post-purchase and abandoned-cart workflows\n              \n            \n          \n        \n\n        \n          \n            Current recommendation\n            Use this preview to approve the offer surface, then attach the real storefront.\n            \n              The repo now has a shippable staging page for the offer. The next production move is\n              replacing the staging state with the real Gumroad checkout and live proof.\n            \n            \n              See production blockers\n              Checkout pending activation",
+      "href": null,
+      "role": null,
+      "ariaDisabled": null,
+      "tabIndex": -1
+    },
+    {
+      "tag": "a",
+      "text": "See production blockers",
+      "href": "#launch-status",
+      "role": null,
+      "ariaDisabled": null,
+      "tabIndex": 0
+    }
+  ],
+  "focusSequence": [
+    {
+      "tag": "a",
+      "text": "Skip to content",
+      "href": "#main-content",
+      "id": null,
+      "className": "skip-link",
+      "x": 16,
+      "y": 16,
+      "w": 152,
+      "h": 45,
+      "outlineStyle": "solid",
+      "outlineWidth": "3px"
+    },
+    {
+      "tag": "a",
+      "text": "Review launch status",
+      "href": "#launch-status",
+      "id": null,
+      "className": "button button-primary",
+      "x": 85,
+      "y": 668,
+      "w": 206,
+      "h": 52,
+      "outlineStyle": "solid",
+      "outlineWidth": "3px"
+    },
+    {
+      "tag": "a",
+      "text": "See what is included",
+      "href": "#stack",
+      "id": null,
+      "className": "button button-secondary",
+      "x": 305,
+      "y": 668,
+      "w": 202,
+      "h": 52,
+      "outlineStyle": "solid",
+      "outlineWidth": "3px"
+    },
+    {
+      "tag": "a",
+      "text": "See production blockers",
+      "href": "#launch-status",
+      "id": null,
+      "className": "button button-primary",
+      "x": 85,
+      "y": 717,
+      "w": 231,
+      "h": 52,
+      "outlineStyle": "solid",
+      "outlineWidth": "3px"
+    },
+    {
+      "tag": "body",
+      "text": "Skip to content\n    \n      \n        \n          Preview deployment\n          The 90-minute operator path through SuiteDash.\n          \n            A staging landing page for The Good Parts of SuiteDash. The product\n            package is built, the copy is aligned, and the storefront connection is the next real\n            production step.\n          \n          \n            Review launch status\n            See what is included\n          \n          \n            \n              Founding\n              $29\n            \n            \n              Public\n              $49\n            \n            \n              Guarantee\n              30 days\n            \n          \n        \n\n        \n          \n            \n              \n                \n                  \n                \n              \n              \n              \n              \n              OPERATOR CUT\n              The Good Parts\n              of SuiteDash\n              Configure the 20% that creates 80% of client-ops value.\n              \n                \n                CRM\n                \n                \n                Intake\n                \n                \n                Portal\n                \n                \n                Projects\n                \n                \n                Files\n                \n                \n                Billing\n                \n                \n                Automation\n              \n              PDF + 3 bonuses | Founding $29 | Public $49\n            \n          \n        \n      \n\n      \n        \n          \n            Why it exists\n            SuiteDash is powerful, but the setup tax is real.\n          \n          \n            \n              You already paid for the tool.\n              \n                The buyers for this product are not beginners. They are operators who already own\n                SuiteDash and want the shortest path to a working deployment.\n              \n            \n            \n              The docs do not solve sequencing.\n              \n                The hard part is not finding features. It is knowing what to configure first, what\n                to skip, and what order prevents rebuild loops.\n              \n            \n            \n              Version one should be narrow.\n              \n                This guide compresses the 20 percent of the platform that creates the clearest\n                early value for portals, intake, projects, files, billing, and automation.\n              \n            \n          \n        \n\n        \n          \n            What is included\n            A compact product stack built for action, not coursework.\n          \n          \n            \n              Core guide\n              The Good Parts of SuiteDash\n              \n                A focused PDF for technically capable owners who want the 90-minute path through\n                the modules that matter first.\n              \n              $197 standalone value\n            \n            \n              Bonus 1\n              90-Minute SuiteDash Lock-In Protocol\n              \n                A checklist for running the first setup pass without over-customizing the account.\n              \n              $97 standalone value\n            \n            \n              Bonus 2\n              7 SuiteDash Automation Recipes\n              \n                The first workflow templates to build after the manual path is clear.\n              \n              $197 standalone value\n            \n            \n              Bonus 3\n              The Kill List\n              \n                Twelve features to ignore until real volume and real workflow pressure make them\n                worth the complexity.\n              \n              $49 standalone value\n            \n          \n        \n\n        \n          \n            What the buyer gets\n            The product is built to move one decision forward fast.\n          \n          \n            \n              01\n              Filter the platform\n              Use the module map to separate signal from feature sprawl.\n            \n            \n              02\n              Pick the first workflow\n              Choose one operational path instead of configuring five at once.\n            \n            \n              03\n              Run the lock-in pass\n              Follow the sequence that reduces role, folder, and automation rework.\n            \n            \n              04\n              Add the highest-payback automation\n              Move from manual clarity to repeatable client operations.\n            \n          \n        \n\n        \n          \n            Positioning\n            For operators who need compression, not hand-holding.\n          \n          \n            \n              Best fit\n              \n                SuiteDash Pinnacle or lifetime buyers who still have a half-built setup\n                Agency operators, freelancers, and technical solopreneurs\n                Buyers who want faster setup decisions, not a full course\n              \n            \n            \n              Not the promise\n              \n                Not a feature-by-feature SuiteDash encyclopedia\n                Not a guarantee that every use case belongs inside SuiteDash\n                Not a live checkout page until storefront activation is complete\n              \n            \n          \n        \n\n        \n          \n            Launch status\n            The preview is live. Production still needs the external switches flipped.\n          \n          \n            \n              Ready now\n              \n                Manuscript drafted and packaged\n                Bonus files exported and zipped\n                Core visuals generated\n                Preview landing page deployed for review\n              \n            \n            \n              Still blocking production\n              \n                Gumroad product URL and checkout activation\n                Three real testimonials before public launch\n                Final live launch date and founding window timestamp\n                Connected post-purchase and abandoned-cart workflows\n              \n            \n          \n        \n\n        \n          \n            Current recommendation\n            Use this preview to approve the offer surface, then attach the real storefront.\n            \n              The repo now has a shippable staging page for the offer. The next production move is\n              replacing the staging state with the real Gumroad checkout and live proof.\n            \n            \n              See production blockers\n              Checkout pending activation",
+      "href": null,
+      "id": null,
+      "className": null,
+      "x": 0,
+      "y": -3073,
+      "w": 1280,
+      "h": 3973,
+      "outlineStyle": "none",
+      "outlineWidth": "3px"
+    },
+    {
+      "tag": "a",
+      "text": "Skip to content",
+      "href": "#main-content",
+      "id": null,
+      "className": "skip-link",
+      "x": 16,
+      "y": 16,
+      "w": 152,
+      "h": 45,
+      "outlineStyle": "solid",
+      "outlineWidth": "3px"
+    },
+    {
+      "tag": "a",
+      "text": "Review launch status",
+      "href": "#launch-status",
+      "id": null,
+      "className": "button button-primary",
+      "x": 85,
+      "y": 668,
+      "w": 206,
+      "h": 52,
+      "outlineStyle": "solid",
+      "outlineWidth": "3px"
+    },
+    {
+      "tag": "a",
+      "text": "See what is included",
+      "href": "#stack",
+      "id": null,
+      "className": "button button-secondary",
+      "x": 305,
+      "y": 668,
+      "w": 202,
+      "h": 52,
+      "outlineStyle": "solid",
+      "outlineWidth": "3px"
+    }
+  ],
+  "skipLinkFocus": {
+    "text": "Skip to content",
+    "x": 16,
+    "y": 16,
+    "w": 152,
+    "h": 45
+  },
+  "skipLinkResult": {
+    "hash": "#main-content",
+    "activeTag": "main",
+    "activeId": "main-content",
+    "scrollY": 886
+  },
+  "mobileMetrics": {
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "bodyScrollWidth": 390,
+    "h1Text": "The 90-minute operator path through SuiteDash.",
+    "h1Rect": {
+      "x": 41,
+      "y": 72,
+      "w": 308,
+      "h": 298
+    },
+    "buttons": [
+      {
+        "text": "Review launch status",
+        "tag": "a",
+        "w": 206,
+        "h": 52,
+        "x": 41,
+        "y": 559
+      },
+      {
+        "text": "See what is included",
+        "tag": "a",
+        "w": 202,
+        "h": 52,
+        "x": 41,
+        "y": 625
+      },
+      {
+        "text": "See production blockers",
+        "tag": "a",
+        "w": 231,
+        "h": 52,
+        "x": 41,
+        "y": 6628
+      },
+      {
+        "text": "Checkout pending activation",
+        "tag": "span",
+        "w": 268,
+        "h": 52,
+        "x": 41,
+        "y": 6694
+      }
+    ],
+    "minTapHeight": 52
+  },
+  "axe": {
+    "desktop": {
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                ".hero-copy > .eyebrow"
+              ]
+            },
+            {
+              "target": [
+                "h1"
+              ]
+            },
+            {
+              "target": [
+                ".lede"
+              ]
+            },
+            {
+              "target": [
+                ".lede > strong"
+              ]
+            },
+            {
+              "target": [
+                ".hero-copy > .hero-actions > .button-primary[href$=\"#launch-status\"]"
+              ]
+            },
+            {
+              "target": [
+                ".button-secondary"
+              ]
+            },
+            {
+              "target": [
+                "div:nth-child(1) > dt"
+              ]
+            },
+            {
+              "target": [
+                "div:nth-child(1) > dd"
+              ]
+            },
+            {
+              "target": [
+                "div:nth-child(2) > dt"
+              ]
+            },
+            {
+              "target": [
+                "div:nth-child(2) > dd"
+              ]
+            },
+            {
+              "target": [
+                "div:nth-child(3) > dt"
+              ]
+            },
+            {
+              "target": [
+                "div:nth-child(3) > dd"
+              ]
+            },
+            {
+              "target": [
+                "text[y=\"145\"]"
+              ]
+            },
+            {
+              "target": [
+                "text[y=\"265\"]"
+              ]
+            },
+            {
+              "target": [
+                "text[y=\"345\"]"
+              ]
+            },
+            {
+              "target": [
+                "text[y=\"405\"]"
+              ]
+            },
+            {
+              "target": [
+                "text[x=\"195\"]"
+              ]
+            },
+            {
+              "target": [
+                "text[x=\"341\"]"
+              ]
+            },
+            {
+              "target": [
+                "text[x=\"487\"]"
+              ]
+            },
+            {
+              "target": [
+                "text[x=\"633\"]"
+              ]
+            },
+            {
+              "target": [
+                "text[x=\"779\"]"
+              ]
+            },
+            {
+              "target": [
+                "text[x=\"925\"]"
+              ]
+            },
+            {
+              "target": [
+                "text[x=\"1071\"]"
+              ]
+            },
+            {
+              "target": [
+                "text[y=\"620\"]"
+              ]
+            },
+            {
+              "target": [
+                ".reveal-2 > .section-heading > .eyebrow"
+              ]
+            },
+            {
+              "target": [
+                ".reveal-2 > .section-heading > h2"
+              ]
+            },
+            {
+              "target": [
+                ".card-grid > .panel:nth-child(1) > h3"
+              ]
+            },
+            {
+              "target": [
+                ".panel:nth-child(1) > p"
+              ]
+            },
+            {
+              "target": [
+                ".card-grid > .panel:nth-child(2) > h3"
+              ]
+            },
+            {
+              "target": [
+                ".panel:nth-child(2) > p"
+              ]
+            },
+            {
+              "target": [
+                ".panel:nth-child(3) > h3"
+              ]
+            },
+            {
+              "target": [
+                ".panel:nth-child(3) > p"
+              ]
+            },
+            {
+              "target": [
+                "#stack > .section-heading > .eyebrow"
+              ]
+            },
+            {
+              "target": [
+                "#stack > .section-heading > h2"
+              ]
+            },
+            {
+              "target": [
+                ".stack-card-core > .stack-label"
+              ]
+            },
+            {
+              "target": [
+                ".stack-card-core > h3"
+              ]
+            },
+            {
+              "target": [
+                ".stack-card-core > p"
+              ]
+            },
+            {
+              "target": [
+                ".stack-card-core > .stack-value"
+              ]
+            },
+            {
+              "target": [
+                ".stack-card:nth-child(2) > .stack-label"
+              ]
+            },
+            {
+              "target": [
+                ".stack-card:nth-child(2) > h3"
+              ]
+            },
+            {
+              "target": [
+                ".stack-card:nth-child(2) > p"
+              ]
+            },
+            {
+              "target": [
+                ".stack-card:nth-child(2) > .stack-value"
+              ]
+            },
+            {
+              "target": [
+                ".stack-card:nth-child(3) > .stack-label"
+              ]
+            },
+            {
+              "target": [
+                ".stack-card:nth-child(3) > h3"
+              ]
+            },
+            {
+              "target": [
+                ".stack-card:nth-child(3) > p"
+              ]
+            },
+            {
+              "target": [
+                ".stack-card:nth-child(3) > .stack-value"
+              ]
+            },
+            {
+              "target": [
+                ".stack-card:nth-child(4) > .stack-label"
+              ]
+            },
+            {
+              "target": [
+                ".stack-card:nth-child(4) > h3"
+              ]
+            },
+            {
+              "target": [
+                ".stack-card:nth-child(4) > p"
+              ]
+            },
+            {
+              "target": [
+                ".stack-card:nth-child(4) > .stack-value"
+              ]
+            },
+            {
+              "target": [
+                ".reveal-3:nth-child(3) > .section-heading > .eyebrow"
+              ]
+            },
+            {
+              "target": [
+                ".reveal-3:nth-child(3) > .section-heading > h2"
+              ]
+            },
+            {
+              "target": [
+                ".timeline-step:nth-child(1) > span"
+              ]
+            },
+            {
+              "target": [
+                ".timeline-step:nth-child(1) > h3"
+              ]
+            },
+            {
+              "target": [
+                ".timeline-step:nth-child(1) > p"
+              ]
+            },
+            {
+              "target": [
+                ".timeline-step:nth-child(2) > span"
+              ]
+            },
+            {
+              "target": [
+                ".timeline-step:nth-child(2) > h3"
+              ]
+            },
+            {
+              "target": [
+                ".timeline-step:nth-child(2) > p"
+              ]
+            },
+            {
+              "target": [
+                ".timeline-step:nth-child(3) > span"
+              ]
+            },
+            {
+              "target": [
+                ".timeline-step:nth-child(3) > h3"
+              ]
+            },
+            {
+              "target": [
+                ".timeline-step:nth-child(3) > p"
+              ]
+            },
+            {
+              "target": [
+                ".timeline-step:nth-child(4) > span"
+              ]
+            },
+            {
+              "target": [
+                ".timeline-step:nth-child(4) > h3"
+              ]
+            },
+            {
+              "target": [
+                ".timeline-step:nth-child(4) > p"
+              ]
+            },
+            {
+              "target": [
+                ".reveal-4:nth-child(4) > .section-heading > .eyebrow"
+              ]
+            },
+            {
+              "target": [
+                ".reveal-4:nth-child(4) > .section-heading > h2"
+              ]
+            },
+            {
+              "target": [
+                ".audience-grid > .panel:nth-child(1) > h3"
+              ]
+            },
+            {
+              "target": [
+                ".panel:nth-child(1) > ul > li:nth-child(1)"
+              ]
+            },
+            {
+              "target": [
+                ".panel:nth-child(1) > ul > li:nth-child(2)"
+              ]
+            },
+            {
+              "target": [
+                ".panel:nth-child(1) > ul > li:nth-child(3)"
+              ]
+            },
+            {
+              "target": [
+                ".panel-contrast > h3"
+              ]
+            },
+            {
+              "target": [
+                ".panel-contrast > ul > li:nth-child(1)"
+              ]
+            },
+            {
+              "target": [
+                ".panel-contrast > ul > li:nth-child(2)"
+              ]
+            },
+            {
+              "target": [
+                ".panel-contrast > ul > li:nth-child(3)"
+              ]
+            },
+            {
+              "target": [
+                "#launch-status > .section-heading > .eyebrow"
+              ]
+            },
+            {
+              "target": [
+                "#launch-status > .section-heading > h2"
+              ]
+            },
+            {
+              "target": [
+                ".status-done > h3"
+              ]
+            },
+            {
+              "target": [
+                ".status-done > ul > li:nth-child(1)"
+              ]
+            },
+            {
+              "target": [
+                ".status-done > ul > li:nth-child(2)"
+              ]
+            },
+            {
+              "target": [
+                ".status-done > ul > li:nth-child(3)"
+              ]
+            },
+            {
+              "target": [
+                ".status-done > ul > li:nth-child(4)"
+              ]
+            },
+            {
+              "target": [
+                ".status-pending > h3"
+              ]
+            },
+            {
+              "target": [
+                ".status-pending > ul > li:nth-child(1)"
+              ]
+            },
+            {
+              "target": [
+                ".status-pending > ul > li:nth-child(2)"
+              ]
+            },
+            {
+              "target": [
+                ".status-pending > ul > li:nth-child(3)"
+              ]
+            },
+            {
+              "target": [
+                ".status-pending > ul > li:nth-child(4)"
+              ]
+            },
+            {
+              "target": [
+                ".cta-card > .eyebrow"
+              ]
+            },
+            {
+              "target": [
+                ".cta-card > h2"
+              ]
+            },
+            {
+              "target": [
+                ".cta-card > p:nth-child(3)"
+              ]
+            },
+            {
+              "target": [
+                ".cta-card > .hero-actions > .button-primary[href$=\"#launch-status\"]"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "mobile": {
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                ".hero-copy > .eyebrow"
+              ]
+            },
+            {
+              "target": [
+                "h1"
+              ]
+            },
+            {
+              "target": [
+                ".lede"
+              ]
+            },
+            {
+              "target": [
+                ".lede > strong"
+              ]
+            },
+            {
+              "target": [
+                ".hero-copy > .hero-actions > .button-primary[href$=\"#launch-status\"]"
+              ]
+            },
+            {
+              "target": [
+                ".button-secondary"
+              ]
+            },
+            {
+              "target": [
+                "div:nth-child(1) > dt"
+              ]
+            },
+            {
+              "target": [
+                "div:nth-child(1) > dd"
+              ]
+            },
+            {
+              "target": [
+                "div:nth-child(2) > dt"
+              ]
+            },
+            {
+              "target": [
+                "div:nth-child(2) > dd"
+              ]
+            },
+            {
+              "target": [
+                "div:nth-child(3) > dt"
+              ]
+            },
+            {
+              "target": [
+                "div:nth-child(3) > dd"
+              ]
+            },
+            {
+              "target": [
+                "text[y=\"145\"]"
+              ]
+            },
+            {
+              "target": [
+                "text[y=\"265\"]"
+              ]
+            },
+            {
+              "target": [
+                "text[y=\"345\"]"
+              ]
+            },
+            {
+              "target": [
+                "text[y=\"405\"]"
+              ]
+            },
+            {
+              "target": [
+                "text[x=\"195\"]"
+              ]
+            },
+            {
+              "target": [
+                "text[x=\"341\"]"
+              ]
+            },
+            {
+              "target": [
+                "text[x=\"487\"]"
+              ]
+            },
+            {
+              "target": [
+                "text[x=\"633\"]"
+              ]
+            },
+            {
+              "target": [
+                "text[x=\"779\"]"
+              ]
+            },
+            {
+              "target": [
+                "text[x=\"925\"]"
+              ]
+            },
+            {
+              "target": [
+                "text[x=\"1071\"]"
+              ]
+            },
+            {
+              "target": [
+                "text[y=\"620\"]"
+              ]
+            },
+            {
+              "target": [
+                ".reveal-2 > .section-heading > .eyebrow"
+              ]
+            },
+            {
+              "target": [
+                ".reveal-2 > .section-heading > h2"
+              ]
+            },
+            {
+              "target": [
+                ".card-grid > .panel:nth-child(1) > h3"
+              ]
+            },
+            {
+              "target": [
+                ".panel:nth-child(1) > p"
+              ]
+            },
+            {
+              "target": [
+                ".card-grid > .panel:nth-child(2) > h3"
+              ]
+            },
+            {
+              "target": [
+                ".panel:nth-child(2) > p"
+              ]
+            },
+            {
+              "target": [
+                ".panel:nth-child(3) > h3"
+              ]
+            },
+            {
+              "target": [
+                ".panel:nth-child(3) > p"
+              ]
+            },
+            {
+              "target": [
+                "#stack > .section-heading > .eyebrow"
+              ]
+            },
+            {
+              "target": [
+                "#stack > .section-heading > h2"
+              ]
+            },
+            {
+              "target": [
+                ".stack-card-core > .stack-label"
+              ]
+            },
+            {
+              "target": [
+                ".stack-card-core > h3"
+              ]
+            },
+            {
+              "target": [
+                ".stack-card-core > p"
+              ]
+            },
+            {
+              "target": [
+                ".stack-card-core > .stack-value"
+              ]
+            },
+            {
+              "target": [
+                ".stack-card:nth-child(2) > .stack-label"
+              ]
+            },
+            {
+              "target": [
+                ".stack-card:nth-child(2) > h3"
+              ]
+            },
+            {
+              "target": [
+                ".stack-card:nth-child(2) > p"
+              ]
+            },
+            {
+              "target": [
+                ".stack-card:nth-child(2) > .stack-value"
+              ]
+            },
+            {
+              "target": [
+                ".stack-card:nth-child(3) > .stack-label"
+              ]
+            },
+            {
+              "target": [
+                ".stack-card:nth-child(3) > h3"
+              ]
+            },
+            {
+              "target": [
+                ".stack-card:nth-child(3) > p"
+              ]
+            },
+            {
+              "target": [
+                ".stack-card:nth-child(3) > .stack-value"
+              ]
+            },
+            {
+              "target": [
+                ".stack-card:nth-child(4) > .stack-label"
+              ]
+            },
+            {
+              "target": [
+                ".stack-card:nth-child(4) > h3"
+              ]
+            },
+            {
+              "target": [
+                ".stack-card:nth-child(4) > p"
+              ]
+            },
+            {
+              "target": [
+                ".stack-card:nth-child(4) > .stack-value"
+              ]
+            },
+            {
+              "target": [
+                ".reveal-3:nth-child(3) > .section-heading > .eyebrow"
+              ]
+            },
+            {
+              "target": [
+                ".reveal-3:nth-child(3) > .section-heading > h2"
+              ]
+            },
+            {
+              "target": [
+                ".timeline-step:nth-child(1) > span"
+              ]
+            },
+            {
+              "target": [
+                ".timeline-step:nth-child(1) > h3"
+              ]
+            },
+            {
+              "target": [
+                ".timeline-step:nth-child(1) > p"
+              ]
+            },
+            {
+              "target": [
+                ".timeline-step:nth-child(2) > span"
+              ]
+            },
+            {
+              "target": [
+                ".timeline-step:nth-child(2) > h3"
+              ]
+            },
+            {
+              "target": [
+                ".timeline-step:nth-child(2) > p"
+              ]
+            },
+            {
+              "target": [
+                ".timeline-step:nth-child(3) > span"
+              ]
+            },
+            {
+              "target": [
+                ".timeline-step:nth-child(3) > h3"
+              ]
+            },
+            {
+              "target": [
+                ".timeline-step:nth-child(3) > p"
+              ]
+            },
+            {
+              "target": [
+                ".timeline-step:nth-child(4) > span"
+              ]
+            },
+            {
+              "target": [
+                ".timeline-step:nth-child(4) > h3"
+              ]
+            },
+            {
+              "target": [
+                ".timeline-step:nth-child(4) > p"
+              ]
+            },
+            {
+              "target": [
+                ".reveal-4:nth-child(4) > .section-heading > .eyebrow"
+              ]
+            },
+            {
+              "target": [
+                ".reveal-4:nth-child(4) > .section-heading > h2"
+              ]
+            },
+            {
+              "target": [
+                ".audience-grid > .panel:nth-child(1) > h3"
+              ]
+            },
+            {
+              "target": [
+                ".panel:nth-child(1) > ul > li:nth-child(1)"
+              ]
+            },
+            {
+              "target": [
+                ".panel:nth-child(1) > ul > li:nth-child(2)"
+              ]
+            },
+            {
+              "target": [
+                ".panel:nth-child(1) > ul > li:nth-child(3)"
+              ]
+            },
+            {
+              "target": [
+                ".panel-contrast > h3"
+              ]
+            },
+            {
+              "target": [
+                ".panel-contrast > ul > li:nth-child(1)"
+              ]
+            },
+            {
+              "target": [
+                ".panel-contrast > ul > li:nth-child(2)"
+              ]
+            },
+            {
+              "target": [
+                ".panel-contrast > ul > li:nth-child(3)"
+              ]
+            },
+            {
+              "target": [
+                "#launch-status > .section-heading > .eyebrow"
+              ]
+            },
+            {
+              "target": [
+                "#launch-status > .section-heading > h2"
+              ]
+            },
+            {
+              "target": [
+                ".status-done > h3"
+              ]
+            },
+            {
+              "target": [
+                ".status-done > ul > li:nth-child(1)"
+              ]
+            },
+            {
+              "target": [
+                ".status-done > ul > li:nth-child(2)"
+              ]
+            },
+            {
+              "target": [
+                ".status-done > ul > li:nth-child(3)"
+              ]
+            },
+            {
+              "target": [
+                ".status-done > ul > li:nth-child(4)"
+              ]
+            },
+            {
+              "target": [
+                ".status-pending > h3"
+              ]
+            },
+            {
+              "target": [
+                ".status-pending > ul > li:nth-child(1)"
+              ]
+            },
+            {
+              "target": [
+                ".status-pending > ul > li:nth-child(2)"
+              ]
+            },
+            {
+              "target": [
+                ".status-pending > ul > li:nth-child(3)"
+              ]
+            },
+            {
+              "target": [
+                ".status-pending > ul > li:nth-child(4)"
+              ]
+            },
+            {
+              "target": [
+                ".cta-card > .eyebrow"
+              ]
+            },
+            {
+              "target": [
+                ".cta-card > h2"
+              ]
+            },
+            {
+              "target": [
+                ".cta-card > p:nth-child(3)"
+              ]
+            },
+            {
+              "target": [
+                ".cta-card > .hero-actions > .button-primary[href$=\"#launch-status\"]"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

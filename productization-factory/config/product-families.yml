@@ -1,0 +1,578 @@
+default_pricing_ladder: standard_workflow_ladder
+
+families:
+  - slug: client-portal-service-delivery-os
+    name: Client Portal & Service Delivery OS
+    buyer_types:
+      - agencies
+      - consultants
+      - service businesses
+      - operators managing recurring client delivery
+    painful_problems:
+      - onboarding is inconsistent and manual
+      - client communication, proposals, and delivery are fragmented
+      - service operations do not scale cleanly
+    promised_outcomes:
+      - a clean client portal and onboarding system
+      - faster delivery with clearer client communication
+      - a path from digital product into high-ticket implementation
+    tool_categories:
+      - CRM, client portals, and business operations
+      - documents, proposals, and contracts
+      - forms and conversion capture
+    example_tools:
+      - SuiteDash
+      - Agiled
+      - Flowlu
+      - FuseBase
+      - Heybase
+      - Crove
+      - Documentero
+      - UPDF
+    low_ticket_products:
+      - The Good Parts of SuiteDash
+      - Client Portal Setup Checklist
+    toolkit_products:
+      - Client Portal-in-a-Box
+      - Service Business Onboarding Toolkit
+    setup_sprint_offers:
+      - 7-Day Client Portal Setup Sprint
+      - Service Delivery System Implementation Sprint
+    managed_service_offers:
+      - Managed Client Portal Operations
+      - Monthly Client Onboarding and Delivery Operations
+    default_pricing_ladder: standard_workflow_ladder
+    validation_questions:
+      - Does the buyer already feel operational pain around onboarding, proposals, or delivery?
+      - Can this buyer pay for implementation after buying the playbook?
+      - Can proof be collected from existing service-business workflows?
+    success_metrics:
+      - tripwire conversion rate
+      - toolkit attachment rate
+      - setup sprint close rate
+      - managed service conversion rate
+    scoring_inputs:
+      pain_urgency: 19
+      purchasing_power: 15
+      ease_of_targeting: 13
+      tool_leverage: 10
+      speed_to_ship: 9
+      recurring_revenue_potential: 15
+      proof_case_study_potential: 9
+      strategic_fit: 5
+  - slug: local-lead-generation-os
+    name: Local Lead Generation OS
+    buyer_types:
+      - local service businesses
+      - agencies serving local operators
+      - outbound-driven operators
+    painful_problems:
+      - qualified leads are inconsistent
+      - follow-up is slow or manual
+      - outreach is not systemized
+    promised_outcomes:
+      - a repeatable lead engine
+      - higher-quality booked conversations
+      - a retainer path tied to lead volume and follow-up
+    tool_categories:
+      - lead generation and prospecting
+      - outreach and nurture
+      - CRM and follow-up
+    example_tools:
+      - Google Maps Scraper
+      - LeadRocks
+      - Clodura.AI
+      - BrandNav
+      - Reoon Email Verifier
+      - SalesNexus
+      - Acumbamail
+      - SuiteDash
+    low_ticket_products:
+      - Local Lead Engine Blueprint
+      - Prospect List Building SOP
+    toolkit_products:
+      - Local Lead Capture and Follow-Up Kit
+      - Appointment Pipeline Toolkit
+    setup_sprint_offers:
+      - Lead Engine Setup Sprint
+      - Outreach and Follow-Up Build Sprint
+    managed_service_offers:
+      - Managed Local Lead System
+      - Monthly Appointment Engine
+    default_pricing_ladder: standard_workflow_ladder
+    validation_questions:
+      - Are buyers actively spending to solve lead flow problems already?
+      - Can the promised lead outcome be measured clearly?
+      - Is a narrow niche or geography easy to target first?
+    success_metrics:
+      - verified leads produced
+      - reply rate
+      - booked calls
+      - retained monthly accounts
+    scoring_inputs:
+      pain_urgency: 20
+      purchasing_power: 14
+      ease_of_targeting: 14
+      tool_leverage: 10
+      speed_to_ship: 9
+      recurring_revenue_potential: 15
+      proof_case_study_potential: 9
+      strategic_fit: 5
+  - slug: directory-launch-os
+    name: Directory Launch OS
+    buyer_types:
+      - niche directory founders
+      - local market operators
+      - category owners building lead marketplaces
+    painful_problems:
+      - directories are hard to structure, populate, and monetize
+      - local category sites often launch without a real lead system
+      - operators do not know how to connect directory traffic to partner revenue
+    promised_outcomes:
+      - a monetizable local or niche directory
+      - a clearer structure for listings, pages, and lead routing
+      - a setup path that ladders into partner or subscription revenue
+    tool_categories:
+      - directory platforms
+      - WordPress visual and directory infrastructure
+      - lead capture and routing
+    example_tools:
+      - Brilliant Directories
+      - Directorist
+      - CubeWP
+      - Microthemer
+      - ElementsKit
+      - Formaloo
+      - SuiteDash
+      - NeuronWriter
+    low_ticket_products:
+      - Local Directory Launch Playbook
+      - Directory Monetization Checklist
+    toolkit_products:
+      - Directory Monetization Toolkit
+      - Local Directory-in-a-Box
+    setup_sprint_offers:
+      - Directory Launch Sprint
+      - Niche Directory Monetization Sprint
+    managed_service_offers:
+      - Managed Directory Buildout
+      - Directory Operations and Lead Routing Retainer
+    default_pricing_ladder: standard_workflow_ladder
+    validation_questions:
+      - Is there a clear niche or geography with monetizable categories?
+      - Can buyers see directory ownership as a shortcut to partner demand?
+      - Is there a realistic first proof path through a pilot directory?
+    success_metrics:
+      - directories launched
+      - partner categories sold
+      - listing-to-lead conversion rate
+      - recurring partner revenue
+    scoring_inputs:
+      pain_urgency: 16
+      purchasing_power: 12
+      ease_of_targeting: 12
+      tool_leverage: 10
+      speed_to_ship: 8
+      recurring_revenue_potential: 14
+      proof_case_study_potential: 10
+      strategic_fit: 5
+  - slug: authority-site-affiliate-os
+    name: Authority Site / Affiliate OS
+    buyer_types:
+      - affiliate site builders
+      - niche content operators
+      - directory owners needing authority traffic
+    painful_problems:
+      - content systems are inconsistent
+      - keyword and publishing work is slow
+      - traffic does not compound without structure
+    promised_outcomes:
+      - a repeatable content engine
+      - SEO-led authority assets
+      - monetization through traffic, affiliates, and lead capture
+    tool_categories:
+      - SEO research and optimization
+      - AI writing and publishing
+      - content distribution
+    example_tools:
+      - WriterZen
+      - NeuronWriter
+      - Katteb
+      - WordHero
+      - Story Chief
+      - WPAutoBlog
+      - Squirrly SEO
+      - Screpy
+    low_ticket_products:
+      - 100-Article Authority Site Blueprint
+      - Authority Site Niche Selection Worksheet
+    toolkit_products:
+      - Authority Site Launch Pack
+      - Programmatic Content Toolkit
+    setup_sprint_offers:
+      - Authority Site Build Sprint
+      - 30-Article Local Content Sprint
+    managed_service_offers:
+      - Monthly SEO Content Engine
+      - Managed Authority Site Publishing
+    default_pricing_ladder: standard_workflow_ladder
+    validation_questions:
+      - Is the niche commercially valuable enough to justify content compounding?
+      - Can proof be shown with indexed pages, traffic, or affiliate clicks?
+      - Does the buyer understand delayed but compounding SEO outcomes?
+    success_metrics:
+      - pages published
+      - pages indexed
+      - organic traffic
+      - affiliate clicks or lead captures
+    scoring_inputs:
+      pain_urgency: 15
+      purchasing_power: 11
+      ease_of_targeting: 11
+      tool_leverage: 9
+      speed_to_ship: 8
+      recurring_revenue_potential: 12
+      proof_case_study_potential: 9
+      strategic_fit: 5
+  - slug: automation-backbone-os
+    name: Automation Backbone OS
+    buyer_types:
+      - service businesses drowning in repetitive admin work
+      - operators managing multi-tool workflows
+      - agencies productizing operations
+    painful_problems:
+      - workflows are manual, brittle, or duplicated
+      - data does not move cleanly between systems
+      - staff time is wasted on repetitive admin work
+    promised_outcomes:
+      - fewer manual steps
+      - clearer process automation
+      - a high-ticket implementation lane
+    tool_categories:
+      - workflow automation and integration
+      - browser automation and RPA
+    example_tools:
+      - Activepieces
+      - Boost.space
+      - KonnectzIT
+      - Albato
+      - PROCESIO
+      - TaskMagic
+      - RTILA
+    low_ticket_products:
+      - Automation Audit Checklist
+      - No-Code Automation SOP Pack
+    toolkit_products:
+      - Automation Recipe Pack
+      - Local Business Automation Blueprint
+    setup_sprint_offers:
+      - Automation Backbone Setup Sprint
+      - Admin Workflow Reduction Sprint
+    managed_service_offers:
+      - Managed Automation Operations
+      - Monthly Integration and Workflow Maintenance
+    default_pricing_ladder: premium_b2b_ladder
+    validation_questions:
+      - Does the buyer already feel pain from repetitive admin work?
+      - Is there a small workflow that can prove savings quickly?
+      - Can workflow savings be measured in hours or handoffs removed?
+    success_metrics:
+      - workflows automated
+      - hours saved
+      - error rate reduction
+      - automation retainers closed
+    scoring_inputs:
+      pain_urgency: 18
+      purchasing_power: 14
+      ease_of_targeting: 11
+      tool_leverage: 10
+      speed_to_ship: 7
+      recurring_revenue_potential: 14
+      proof_case_study_potential: 9
+      strategic_fit: 5
+  - slug: ai-agent-chatbot-os
+    name: AI Agent / Chatbot OS
+    buyer_types:
+      - local businesses with lead intake or support demand
+      - teams wanting AI-assisted onboarding or support
+      - operators experimenting with voice or chat automation
+    painful_problems:
+      - inquiries are missed or handled slowly
+      - support and intake are too manual
+      - buyers want AI but do not know how to operationalize it
+    promised_outcomes:
+      - a focused intake or support agent
+      - faster response handling
+      - a productized service around AI-assisted operations
+    tool_categories:
+      - AI assistants, chatbots, and voice agents
+      - automation routing
+    example_tools:
+      - Chatbase
+      - Insighto.ai
+      - Thoughtly
+      - Pickaxe
+      - Straico
+      - Triplo AI
+      - AgenticFlow
+    low_ticket_products:
+      - AI Intake Bot Prompt Pack
+      - Website Chatbot Setup Guide
+    toolkit_products:
+      - AI Receptionist Blueprint
+      - Voice Agent Follow-Up System
+    setup_sprint_offers:
+      - AI Intake Agent Setup Sprint
+      - Voice Workflow Build Sprint
+    managed_service_offers:
+      - Managed AI Receptionist
+      - Monthly AI Support Workflow Optimization
+    default_pricing_ladder: standard_workflow_ladder
+    validation_questions:
+      - Is the workflow specific enough to avoid generic chatbot positioning?
+      - Can the buyer name missed calls, missed leads, or slow support as a real pain?
+      - Is there a safe first workflow to implement without overpromising autonomy?
+    success_metrics:
+      - qualified chats or calls handled
+      - handoff rate
+      - response time reduction
+      - monthly managed accounts
+    scoring_inputs:
+      pain_urgency: 14
+      purchasing_power: 12
+      ease_of_targeting: 10
+      tool_leverage: 9
+      speed_to_ship: 8
+      recurring_revenue_potential: 13
+      proof_case_study_potential: 8
+      strategic_fit: 4
+  - slug: sales-outreach-os
+    name: Sales Outreach OS
+    buyer_types:
+      - B2B service providers
+      - agencies
+      - operators selling appointments or meetings
+    painful_problems:
+      - outbound is inconsistent
+      - personalization is weak
+      - follow-up is not sequenced well
+    promised_outcomes:
+      - more consistent outreach
+      - better reply and booking rates
+      - a path into appointment or outreach retainers
+    tool_categories:
+      - lead generation and enrichment
+      - email and campaign operations
+    example_tools:
+      - SalesNexus
+      - LeadRocks
+      - Clodura.AI
+      - BrandNav
+      - Autobound
+      - LeadScripts
+      - VBOUT
+      - Emailit
+    low_ticket_products:
+      - Cold Email Personalization Prompt Pack
+      - B2B Prospecting SOP
+    toolkit_products:
+      - Outreach Campaign Kit
+      - Appointment Setting Automation Blueprint
+    setup_sprint_offers:
+      - Outbound Engine Setup Sprint
+      - Appointment Pipeline Build Sprint
+    managed_service_offers:
+      - Managed Appointment Engine
+      - Monthly Outreach Operations
+    default_pricing_ladder: premium_b2b_ladder
+    validation_questions:
+      - Can the buyer quantify the value of more booked calls?
+      - Is there a niche with existing outbound demand?
+      - Can proof be demonstrated with replies, meetings, or sales?
+    success_metrics:
+      - reply rate
+      - booked calls
+      - meetings-to-sale rate
+      - monthly managed outreach revenue
+    scoring_inputs:
+      pain_urgency: 17
+      purchasing_power: 14
+      ease_of_targeting: 12
+      tool_leverage: 9
+      speed_to_ship: 8
+      recurring_revenue_potential: 14
+      proof_case_study_potential: 8
+      strategic_fit: 4
+  - slug: content-repurposing-os
+    name: Content Repurposing OS
+    buyer_types:
+      - creators
+      - local businesses needing content support
+      - agencies managing social or demo assets
+    painful_problems:
+      - long-form content is underused
+      - content production is slow
+      - distribution assets are hard to sustain
+    promised_outcomes:
+      - more usable content from fewer source assets
+      - faster creative output
+      - a packaging path into media support retainers
+    tool_categories:
+      - media production
+      - visual asset creation
+      - distribution support
+    example_tools:
+      - FlexClip
+      - InVideo Studio
+      - Zebracat
+      - Minvo
+      - Fliki
+      - Publitio
+      - SUPERMACHINE
+      - Pixelied
+    low_ticket_products:
+      - 30-Day Shorts Content Calendar
+      - Faceless Video Niche Planner
+    toolkit_products:
+      - Content Repurposing System
+      - Local Business Video Ad Kit
+    setup_sprint_offers:
+      - Content Machine Setup Sprint
+      - Repurposing Workflow Build Sprint
+    managed_service_offers:
+      - Monthly Short-Form Content Engine
+      - Managed Demo and Tutorial Asset Production
+    default_pricing_ladder: standard_workflow_ladder
+    validation_questions:
+      - Is the buyer already creating source material worth repurposing?
+      - Can the content output be tied to leads, traffic, or education value?
+      - Is there a narrow format or niche where content fatigue is painful?
+    success_metrics:
+      - assets published
+      - asset reuse rate
+      - CTA clicks
+      - retained content clients
+    scoring_inputs:
+      pain_urgency: 12
+      purchasing_power: 10
+      ease_of_targeting: 11
+      tool_leverage: 8
+      speed_to_ship: 9
+      recurring_revenue_potential: 11
+      proof_case_study_potential: 8
+      strategic_fit: 4
+  - slug: analytics-optimization-os
+    name: Analytics / Optimization OS
+    buyer_types:
+      - local businesses with web traffic
+      - agencies offering audits or reporting
+      - directory and content operators
+    painful_problems:
+      - websites are underperforming without visibility
+      - reporting is inconsistent
+      - optimization work lacks a clear process
+    promised_outcomes:
+      - clearer reporting
+      - faster audits
+      - optimization retainers with measurable outputs
+    tool_categories:
+      - analytics, CRO, and reporting
+      - security, uptime, and governance
+    example_tools:
+      - Plerdy
+      - TruConversion
+      - Labrika
+      - Screpy
+      - OWOX BI
+      - Two Minute Reports
+      - Pulsetic
+      - BackupSheep
+    low_ticket_products:
+      - Website Audit Checklist
+      - Conversion Audit Template
+    toolkit_products:
+      - SEO and CRO Reporting Dashboard Pack
+      - Local Business Audit Kit
+    setup_sprint_offers:
+      - Website Optimization Sprint
+      - Reporting Stack Setup Sprint
+    managed_service_offers:
+      - Monthly Optimization Retainer
+      - Managed Reporting and Monitoring
+    default_pricing_ladder: standard_workflow_ladder
+    validation_questions:
+      - Does the buyer already have enough traffic or pages to justify optimization?
+      - Can audit recommendations turn into implementation revenue?
+      - Is proof easy to show with before-and-after metrics?
+    success_metrics:
+      - audits sold
+      - conversion improvements
+      - report delivery retention
+      - optimization retainer revenue
+    scoring_inputs:
+      pain_urgency: 13
+      purchasing_power: 12
+      ease_of_targeting: 11
+      tool_leverage: 8
+      speed_to_ship: 8
+      recurring_revenue_potential: 12
+      proof_case_study_potential: 9
+      strategic_fit: 4
+  - slug: micro-saas-launch-os
+    name: Micro-SaaS Launch OS
+    buyer_types:
+      - niche founders
+      - consultants productizing expertise
+      - agencies building internal or client tools
+    painful_problems:
+      - MVP scope is unclear
+      - app, backend, and billing setup are fragmented
+      - founders need faster validation paths
+    promised_outcomes:
+      - a faster MVP launch path
+      - a clearer build-and-billing setup
+      - a premium setup sprint or venture build path
+    tool_categories:
+      - no-code app and backend development
+      - frontend and landing surfaces
+      - billing and product feedback
+    example_tools:
+      - Directual
+      - NoCodeBackend
+      - Frontly
+      - Krisspy
+      - TeleportHQ
+      - NativeRest
+      - Chargebee
+      - Flotiq
+    low_ticket_products:
+      - Micro-SaaS Idea Validation Checklist
+      - No-Code SaaS Build Map
+    toolkit_products:
+      - SaaS MVP Launch Kit
+      - Subscription Billing Setup Blueprint
+    setup_sprint_offers:
+      - SaaS MVP Setup Sprint
+      - Niche App Validation Sprint
+    managed_service_offers:
+      - Managed MVP Operations
+      - Monthly Product Ops and Iteration Support
+    default_pricing_ladder: premium_b2b_ladder
+    validation_questions:
+      - Is the buyer specific enough to avoid generic founder positioning?
+      - Can an MVP ship fast enough to justify the promise?
+      - Is there a premium implementation or advisory lane after the playbook?
+    success_metrics:
+      - MVPs launched
+      - activation rate
+      - trial-to-paid conversion
+      - premium setup revenue
+    scoring_inputs:
+      pain_urgency: 12
+      purchasing_power: 12
+      ease_of_targeting: 9
+      tool_leverage: 9
+      speed_to_ship: 6
+      recurring_revenue_potential: 13
+      proof_case_study_potential: 8
+      strategic_fit: 4

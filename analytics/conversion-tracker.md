@@ -6,7 +6,7 @@ Conversion metrics across the funnel. Update monthly, per launch, and after majo
 
 | Product | Page Visits | Sales | Conversion Rate | Notes |
 |---|---|---|---|---|
-| 01-suitedash-good-parts | | | | |
+| 01-suitedash-good-parts | 0 | 0 | N/A | Baseline: see `analytics/by-product/01-suitedash-good-parts.md` |
 | 02-pdf-slot-2 | | | | |
 | ... | | | | |
 
@@ -19,13 +19,13 @@ Conversion metrics across the funnel. Update monthly, per launch, and after majo
 
 | Product | Launch Date | Email # | Open Rate | Click Rate | Conversion |
 |---|---|---|---|---|---|
-| 01-suitedash-good-parts | | 1 | | | |
-| 01-suitedash-good-parts | | 2 | | | |
-| 01-suitedash-good-parts | | 3 | | | |
-| 01-suitedash-good-parts | | 4 | | | |
-| 01-suitedash-good-parts | | 5 | | | |
-| 01-suitedash-good-parts | | 6 | | | |
-| 01-suitedash-good-parts | | 7 | | | |
+| 01-suitedash-good-parts | 2026-05-20 (target) | 1 | | | |
+| 01-suitedash-good-parts | 2026-05-20 (target) | 2 | | | |
+| 01-suitedash-good-parts | 2026-05-20 (target) | 3 | | | |
+| 01-suitedash-good-parts | 2026-05-20 (target) | 4 | | | |
+| 01-suitedash-good-parts | 2026-05-20 (target) | 5 | | | |
+| 01-suitedash-good-parts | 2026-05-20 (target) | 6 | | | |
+| 01-suitedash-good-parts | 2026-05-20 (target) | 7 | | | |
 
 **Industry benchmarks:**
 - Email 1 open rate: 60%+ (warm list)

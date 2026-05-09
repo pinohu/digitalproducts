@@ -10,6 +10,10 @@ Specifications for the n8n workflows that automate scheduled and event-driven pa
 | [`launch-automation.md`](./launch-automation.md) | Manual + scheduled | Sends the 7-email launch sequence with social posts |
 | [`post-purchase-automation.md`](./post-purchase-automation.md) | Webhook (Gumroad purchase) | Triggers post-purchase email sequence + analytics logging |
 | [`analytics-aggregation.md`](./analytics-aggregation.md) | Cron (weekly) | Pulls Gumroad data, updates analytics/revenue-tracker.md |
+| [`appsumo-readonly-summary.md`](./appsumo-readonly-summary.md) + [`appsumo-readonly-summary.draft.json`](./appsumo-readonly-summary.draft.json) | Manual first, then weekly Cron after review | Data-minimized read-only Agiled/AITable operating summaries; draft JSON is disabled/manual-only and contains no secrets |
+| [`emailit-readonly-health-check.md`](./emailit-readonly-health-check.md) + [`emailit-readonly-health-check.draft.json`](./emailit-readonly-health-check.draft.json) | Manual first; weekly Cron only after review | DIG-40 disabled/manual-first Emailit API v2 health pack for domains/events/templates/optional webhooks; no sends or contact/domain/template/webhook mutations are authorized. |
+| [`certopus-readonly-health-check.md`](./certopus-readonly-health-check.md) + [`certopus-readonly-health-check.draft.json`](./certopus-readonly-health-check.draft.json) | Manual first; weekly Cron only after review | DIG-47 disabled/manual-first Certopus health pack for templates/organisations/wallet/SMTP metadata counts; no certificate issuance, sends, downloads/exports, recipient, SMTP/domain/white-label, or wallet mutations are authorized. |
+| [`implementation-plan.md`](./implementation-plan.md) | Manual build sequence | Orders the workflow builds, dependencies, credentials, and production gates |
 
 ## Format
 
@@ -43,6 +47,10 @@ Before any workflow runs, configure these credentials in n8n:
 | GitHub PAT (write to this repo) | idea-discovery | use existing token from Dynasty memory (gitignored in `tools/.env`) |
 | Beehiiv / ConvertKit API key | launch (when graduated) | platform settings |
 | LinkedIn API or Taplio | launch (social posts) | Taplio settings or LinkedIn dev portal |
+| Agiled API key | AppSumo read-only summary | n8n credential record; do not store in workflow JSON |
+| AITable API key | AppSumo read-only summary | n8n credential record or rotated automation key; DIG-35 showed stale dotenv drift can cause false 401s |
+| Emailit API key | Future Emailit read-only health check | Dedicated automation-owned n8n credential record preferred; DIG-39 verified v2 bearer-auth GETs with secure runtime keys, but no sends or mutations are approved |
+| Certopus API key | Certopus read-only health check | Dedicated automation-owned n8n credential/env record preferred (`CERTOPUS_API_KEY_AUTOMATION`); DIG-45 verified `X-API-KEY` GETs with secure runtime key, but no certificate operations, sends, downloads/exports, recipient, SMTP/domain/white-label, or wallet mutations are approved |
 
 ## Convention: Source-of-Truth in Git
 

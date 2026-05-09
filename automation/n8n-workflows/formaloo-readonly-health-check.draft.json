@@ -1,0 +1,107 @@
+{
+  "name": "Formaloo Read-Only Health Check (DRAFT - DISABLED)",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual-trigger",
+      "name": "Manual Trigger Only",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "command": "cd /mnt/c/Users/ohu00/Desktop/digitalproducts && tools/.venv/bin/python tools/appsumo_readonly_probe.py formaloo forms --env-file /mnt/c/Users/ohu00/Documents/.env --page-size 1 --summary-only --json"
+      },
+      "id": "formaloo-forms-summary",
+      "name": "Formaloo Forms Summary (GET-only)",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        260,
+        -80
+      ],
+      "notes": "Replace --env-file with n8n-managed dedicated FORMALOO automation credentials before scheduling. This command mints a short-lived token, then performs GET /forms/ only."
+    },
+    {
+      "parameters": {
+        "command": "cd /mnt/c/Users/ohu00/Desktop/digitalproducts && tools/.venv/bin/python tools/appsumo_readonly_probe.py formaloo profile --env-file /mnt/c/Users/ohu00/Documents/.env --summary-only --json"
+      },
+      "id": "formaloo-profile-summary",
+      "name": "Formaloo Profile Summary (GET-only)",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        260,
+        100
+      ],
+      "notes": "Summary-only profile output intentionally omits owner email/name/phone/url fields and reports coarse readiness fields only."
+    },
+    {
+      "parameters": {
+        "jsCode": "const banned = ['authorization_token', 'api_key', 'secret', 'password', 'bearer ', 'jwt ', 'phone_number', 'owner', 'respondent'];\nconst payload = JSON.stringify(items.map(i => i.json));\nconst lower = payload.toLowerCase();\nconst found = banned.filter(term => lower.includes(term));\nif (found.length) {\n  throw new Error(`Formaloo payload failed safety scan: ${found.join(', ')}`);\n}\nreturn [{ json: { ok: true, checked_at: new Date().toISOString(), summaries: items.map(i => i.json) } }];"
+      },
+      "id": "safety-scan",
+      "name": "Safety Scan Summary Payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        0
+      ],
+      "notes": "Keep this strict. If it blocks a useful field, update the Python summary first rather than loosening the scan around raw data."
+    }
+  ],
+  "connections": {
+    "Manual Trigger Only": {
+      "main": [
+        [
+          {
+            "node": "Formaloo Forms Summary (GET-only)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Formaloo Profile Summary (GET-only)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formaloo Forms Summary (GET-only)": {
+      "main": [
+        [
+          {
+            "node": "Safety Scan Summary Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formaloo Profile Summary (GET-only)": {
+      "main": [
+        [
+          {
+            "node": "Safety Scan Summary Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "description": "Draft only. Disabled/manual-first Formaloo health digest. No form submissions, exports, webhook changes, schema mutations, or scheduled activation authorized by DIG-67."
+  }
+}

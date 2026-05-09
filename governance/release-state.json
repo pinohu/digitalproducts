@@ -1,0 +1,54 @@
+{
+  "product": "The Good Parts of SuiteDash",
+  "environment": "preview_only",
+  "launchTruth": "repo_package_ready_preview_live_not_shipped",
+  "lastUpdated": "2026-05-08",
+  "owners": {
+    "quality": "Quality Gatekeeper",
+    "accessibility": "Accessibility Auditor",
+    "release": "Release Governor",
+    "uiUx": "Product Builder",
+    "orchestration": "Chief of Staff"
+  },
+  "qualityEvidence": {
+    "storybookBuilt": true,
+    "playwrightPassed": true,
+    "axePassed": true,
+    "pa11yPassed": true,
+    "lighthousePassed": true,
+    "lastVerificationNote": "2026-05-08: Storybook build, Playwright governance suite (8/8, including axe), Pa11y CI (1/1), and Lighthouse CI passed from Windows PowerShell in the repo. WSL browser execution still fails locally on missing Chromium shared library libnspr4.so, so use the Windows runner or GitHub workflow for fresh browser evidence until WSL dependencies are repaired. Lighthouse completed with non-blocking SEO/performance warnings only. Production launch remains blocked by releaseReadiness fields, testimonials, first-sale evidence, and manual approval."
+  },
+  "releaseReadiness": {
+    "gumroadProductUrlWired": false,
+    "checkoutFlowTested": false,
+    "testimonialsCount": 0,
+    "automationFlowsLive": false,
+    "domainLinked": false,
+    "firstSaleEvidenceCaptured": false,
+    "manualApprovalRecorded": false
+  },
+  "shippedGate": {
+    "issue": "DIG-33",
+    "status": "blocked",
+    "roadmapDoDPath": "ROADMAP.md#definition-of-done-per-product",
+    "evidenceLedgerPath": "06-launch-playbooks/by-product/01-suitedash-good-parts-dig33-shipped-gate.md",
+    "rule": "Do not add this product to the Shipped Catalog or close DIG-2/DIG-33 until every ROADMAP DoD row is evidenced and first sale is recorded."
+  },
+  "manualActions": {
+    "ledgerPath": "00-foundation/operator-system/manual-actions-ledger.md",
+    "highestPriorityLaunchInputs": [
+      "live Gumroad product and checkout URLs",
+      "3 permissioned testimonials or equivalent proof",
+      "owned-site/storefront/sitemap linkage evidence",
+      "live post-purchase and abandoned-cart workflow evidence",
+      "first-sale evidence and explicit manual approval"
+    ]
+  },
+  "observability": {
+    "mobileHandoffReady": true,
+    "manualActionLedgerReady": true,
+    "paperclipHeartbeatActive": true,
+    "githubArtifactsExpected": true,
+    "mobileControlCenterPath": "00-foundation/operator-system/mobile-control-center.md"
+  }
+}

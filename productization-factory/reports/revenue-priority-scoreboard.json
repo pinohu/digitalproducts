@@ -1,0 +1,327 @@
+{
+  "generated_at": "2026-05-08T13:20:33Z",
+  "recommended_now": {
+    "family_slug": "client-portal-service-delivery-os",
+    "anchor_product": "The Good Parts of SuiteDash"
+  },
+  "rubric": {
+    "pain_urgency": 20,
+    "purchasing_power": 15,
+    "ease_of_targeting": 15,
+    "tool_leverage": 10,
+    "speed_to_ship": 10,
+    "recurring_revenue_potential": 15,
+    "proof_case_study_potential": 10,
+    "strategic_fit": 5
+  },
+  "families": [
+    {
+      "slug": "local-lead-generation-os",
+      "name": "Local Lead Generation OS",
+      "score": 96,
+      "confidence_band": "Immediate priority",
+      "default_pricing_ladder": "standard_workflow_ladder",
+      "example_tools": [
+        "Google Maps Scraper",
+        "LeadRocks",
+        "Clodura.AI",
+        "BrandNav",
+        "Reoon Email Verifier",
+        "SalesNexus",
+        "Acumbamail",
+        "SuiteDash"
+      ],
+      "low_ticket_products": [
+        "Local Lead Engine Blueprint",
+        "Prospect List Building SOP"
+      ],
+      "scoring_inputs": {
+        "pain_urgency": 20,
+        "purchasing_power": 14,
+        "ease_of_targeting": 14,
+        "tool_leverage": 10,
+        "speed_to_ship": 9,
+        "recurring_revenue_potential": 15,
+        "proof_case_study_potential": 9,
+        "strategic_fit": 5
+      }
+    },
+    {
+      "slug": "client-portal-service-delivery-os",
+      "name": "Client Portal & Service Delivery OS",
+      "score": 95,
+      "confidence_band": "Immediate priority",
+      "default_pricing_ladder": "standard_workflow_ladder",
+      "example_tools": [
+        "SuiteDash",
+        "Agiled",
+        "Flowlu",
+        "FuseBase",
+        "Heybase",
+        "Crove",
+        "Documentero",
+        "UPDF"
+      ],
+      "low_ticket_products": [
+        "The Good Parts of SuiteDash",
+        "Client Portal Setup Checklist"
+      ],
+      "scoring_inputs": {
+        "pain_urgency": 19,
+        "purchasing_power": 15,
+        "ease_of_targeting": 13,
+        "tool_leverage": 10,
+        "speed_to_ship": 9,
+        "recurring_revenue_potential": 15,
+        "proof_case_study_potential": 9,
+        "strategic_fit": 5
+      }
+    },
+    {
+      "slug": "automation-backbone-os",
+      "name": "Automation Backbone OS",
+      "score": 88,
+      "confidence_band": "Strong build candidate",
+      "default_pricing_ladder": "premium_b2b_ladder",
+      "example_tools": [
+        "Activepieces",
+        "Boost.space",
+        "KonnectzIT",
+        "Albato",
+        "PROCESIO",
+        "TaskMagic",
+        "RTILA"
+      ],
+      "low_ticket_products": [
+        "Automation Audit Checklist",
+        "No-Code Automation SOP Pack"
+      ],
+      "scoring_inputs": {
+        "pain_urgency": 18,
+        "purchasing_power": 14,
+        "ease_of_targeting": 11,
+        "tool_leverage": 10,
+        "speed_to_ship": 7,
+        "recurring_revenue_potential": 14,
+        "proof_case_study_potential": 9,
+        "strategic_fit": 5
+      }
+    },
+    {
+      "slug": "directory-launch-os",
+      "name": "Directory Launch OS",
+      "score": 87,
+      "confidence_band": "Strong build candidate",
+      "default_pricing_ladder": "standard_workflow_ladder",
+      "example_tools": [
+        "Brilliant Directories",
+        "Directorist",
+        "CubeWP",
+        "Microthemer",
+        "ElementsKit",
+        "Formaloo",
+        "SuiteDash",
+        "NeuronWriter"
+      ],
+      "low_ticket_products": [
+        "Local Directory Launch Playbook",
+        "Directory Monetization Checklist"
+      ],
+      "scoring_inputs": {
+        "pain_urgency": 16,
+        "purchasing_power": 12,
+        "ease_of_targeting": 12,
+        "tool_leverage": 10,
+        "speed_to_ship": 8,
+        "recurring_revenue_potential": 14,
+        "proof_case_study_potential": 10,
+        "strategic_fit": 5
+      }
+    },
+    {
+      "slug": "sales-outreach-os",
+      "name": "Sales Outreach OS",
+      "score": 86,
+      "confidence_band": "Strong build candidate",
+      "default_pricing_ladder": "premium_b2b_ladder",
+      "example_tools": [
+        "SalesNexus",
+        "LeadRocks",
+        "Clodura.AI",
+        "BrandNav",
+        "Autobound",
+        "LeadScripts",
+        "VBOUT",
+        "Emailit"
+      ],
+      "low_ticket_products": [
+        "Cold Email Personalization Prompt Pack",
+        "B2B Prospecting SOP"
+      ],
+      "scoring_inputs": {
+        "pain_urgency": 17,
+        "purchasing_power": 14,
+        "ease_of_targeting": 12,
+        "tool_leverage": 9,
+        "speed_to_ship": 8,
+        "recurring_revenue_potential": 14,
+        "proof_case_study_potential": 8,
+        "strategic_fit": 4
+      }
+    },
+    {
+      "slug": "authority-site-affiliate-os",
+      "name": "Authority Site / Affiliate OS",
+      "score": 80,
+      "confidence_band": "Strong build candidate",
+      "default_pricing_ladder": "standard_workflow_ladder",
+      "example_tools": [
+        "WriterZen",
+        "NeuronWriter",
+        "Katteb",
+        "WordHero",
+        "Story Chief",
+        "WPAutoBlog",
+        "Squirrly SEO",
+        "Screpy"
+      ],
+      "low_ticket_products": [
+        "100-Article Authority Site Blueprint",
+        "Authority Site Niche Selection Worksheet"
+      ],
+      "scoring_inputs": {
+        "pain_urgency": 15,
+        "purchasing_power": 11,
+        "ease_of_targeting": 11,
+        "tool_leverage": 9,
+        "speed_to_ship": 8,
+        "recurring_revenue_potential": 12,
+        "proof_case_study_potential": 9,
+        "strategic_fit": 5
+      }
+    },
+    {
+      "slug": "ai-agent-chatbot-os",
+      "name": "AI Agent / Chatbot OS",
+      "score": 78,
+      "confidence_band": "Viable once current sprint clears",
+      "default_pricing_ladder": "standard_workflow_ladder",
+      "example_tools": [
+        "Chatbase",
+        "Insighto.ai",
+        "Thoughtly",
+        "Pickaxe",
+        "Straico",
+        "Triplo AI",
+        "AgenticFlow"
+      ],
+      "low_ticket_products": [
+        "AI Intake Bot Prompt Pack",
+        "Website Chatbot Setup Guide"
+      ],
+      "scoring_inputs": {
+        "pain_urgency": 14,
+        "purchasing_power": 12,
+        "ease_of_targeting": 10,
+        "tool_leverage": 9,
+        "speed_to_ship": 8,
+        "recurring_revenue_potential": 13,
+        "proof_case_study_potential": 8,
+        "strategic_fit": 4
+      }
+    },
+    {
+      "slug": "analytics-optimization-os",
+      "name": "Analytics / Optimization OS",
+      "score": 77,
+      "confidence_band": "Viable once current sprint clears",
+      "default_pricing_ladder": "standard_workflow_ladder",
+      "example_tools": [
+        "Plerdy",
+        "TruConversion",
+        "Labrika",
+        "Screpy",
+        "OWOX BI",
+        "Two Minute Reports",
+        "Pulsetic",
+        "BackupSheep"
+      ],
+      "low_ticket_products": [
+        "Website Audit Checklist",
+        "Conversion Audit Template"
+      ],
+      "scoring_inputs": {
+        "pain_urgency": 13,
+        "purchasing_power": 12,
+        "ease_of_targeting": 11,
+        "tool_leverage": 8,
+        "speed_to_ship": 8,
+        "recurring_revenue_potential": 12,
+        "proof_case_study_potential": 9,
+        "strategic_fit": 4
+      }
+    },
+    {
+      "slug": "content-repurposing-os",
+      "name": "Content Repurposing OS",
+      "score": 73,
+      "confidence_band": "Viable once current sprint clears",
+      "default_pricing_ladder": "standard_workflow_ladder",
+      "example_tools": [
+        "FlexClip",
+        "InVideo Studio",
+        "Zebracat",
+        "Minvo",
+        "Fliki",
+        "Publitio",
+        "SUPERMACHINE",
+        "Pixelied"
+      ],
+      "low_ticket_products": [
+        "30-Day Shorts Content Calendar",
+        "Faceless Video Niche Planner"
+      ],
+      "scoring_inputs": {
+        "pain_urgency": 12,
+        "purchasing_power": 10,
+        "ease_of_targeting": 11,
+        "tool_leverage": 8,
+        "speed_to_ship": 9,
+        "recurring_revenue_potential": 11,
+        "proof_case_study_potential": 8,
+        "strategic_fit": 4
+      }
+    },
+    {
+      "slug": "micro-saas-launch-os",
+      "name": "Micro-SaaS Launch OS",
+      "score": 73,
+      "confidence_band": "Viable once current sprint clears",
+      "default_pricing_ladder": "premium_b2b_ladder",
+      "example_tools": [
+        "Directual",
+        "NoCodeBackend",
+        "Frontly",
+        "Krisspy",
+        "TeleportHQ",
+        "NativeRest",
+        "Chargebee",
+        "Flotiq"
+      ],
+      "low_ticket_products": [
+        "Micro-SaaS Idea Validation Checklist",
+        "No-Code SaaS Build Map"
+      ],
+      "scoring_inputs": {
+        "pain_urgency": 12,
+        "purchasing_power": 12,
+        "ease_of_targeting": 9,
+        "tool_leverage": 9,
+        "speed_to_ship": 6,
+        "recurring_revenue_potential": 13,
+        "proof_case_study_potential": 8,
+        "strategic_fit": 4
+      }
+    }
+  ]
+}

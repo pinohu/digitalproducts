@@ -1,0 +1,327 @@
+{
+  "name": "Late / Zernio Read-Only Health Check (DRAFT - DISABLED)",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual-trigger",
+      "name": "Manual Trigger Only",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "repo-path",
+              "name": "repoPath",
+              "value": "/mnt/c/Users/ohu00/Desktop/digitalproducts",
+              "type": "string"
+            },
+            {
+              "id": "python-bin",
+              "name": "pythonBin",
+              "value": "tools/.venv/bin/python",
+              "type": "string"
+            },
+            {
+              "id": "safety-mode",
+              "name": "safetyMode",
+              "value": "GET-only summary-only; no posting, scheduling, account, webhook, inbox, DM, comment, user, or API-key mutations",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-runtime-config",
+      "name": "Set Runtime Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "command": "cd {{$json.repoPath}} && {{$json.pythonBin}} tools/appsumo_readonly_probe.py late profiles --page-size 1 --summary-only --json"
+      },
+      "id": "probe-profiles",
+      "name": "Probe profiles summary",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        500,
+        -300
+      ],
+      "notes": "Requires GETLATE_DEV_API_KEY or a dedicated automation credential in the n8n runtime environment. Do not embed secrets in this JSON."
+    },
+    {
+      "parameters": {
+        "command": "cd {{$json.repoPath}} && {{$json.pythonBin}} tools/appsumo_readonly_probe.py late accounts --page-size 1 --summary-only --json"
+      },
+      "id": "probe-accounts",
+      "name": "Probe accounts summary",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        500,
+        -180
+      ],
+      "notes": "Summary-only; account handles/profile URLs must not be emitted."
+    },
+    {
+      "parameters": {
+        "command": "cd {{$json.repoPath}} && {{$json.pythonBin}} tools/appsumo_readonly_probe.py late account-health --page-size 1 --summary-only --json"
+      },
+      "id": "probe-account-health",
+      "name": "Probe account health summary",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        500,
+        -60
+      ]
+    },
+    {
+      "parameters": {
+        "command": "cd {{$json.repoPath}} && {{$json.pythonBin}} tools/appsumo_readonly_probe.py late posts --page-size 1 --summary-only --json"
+      },
+      "id": "probe-posts",
+      "name": "Probe posts summary",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        500,
+        60
+      ],
+      "notes": "Posts can contain captions/media/social metadata. Keep summary-only and never include raw samples in notification output."
+    },
+    {
+      "parameters": {
+        "command": "cd {{$json.repoPath}} && {{$json.pythonBin}} tools/appsumo_readonly_probe.py late usage-stats --summary-only --json"
+      },
+      "id": "probe-usage-stats",
+      "name": "Probe usage stats summary",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        500,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "command": "cd {{$json.repoPath}} && {{$json.pythonBin}} tools/appsumo_readonly_probe.py late users --page-size 1 --summary-only --json"
+      },
+      "id": "probe-users",
+      "name": "Probe users summary",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        500,
+        300
+      ],
+      "notes": "User data is sensitive. Only counts/status/field names should survive normalization."
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nreturn items.map((item) => {\n  let parsed = {};\n  try {\n    parsed = JSON.parse(item.json.stdout || '{}');\n  } catch (error) {\n    parsed = { parse_error: true };\n  }\n  return {\n    json: {\n      platform: parsed.platform || 'late',\n      resource: parsed.resource || item.json.resource || 'unknown',\n      status_code: parsed.status_code ?? null,\n      record_count_visible: parsed.record_count_visible ?? null,\n      status_counts: parsed.status_counts || {},\n      visible_field_names: parsed.visible_field_names || [],\n      safe_summary_only: true\n    }\n  };\n});"
+      },
+      "id": "normalize-summaries",
+      "name": "Normalize safe summaries only",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        820,
+        0
+      ],
+      "notes": "Drop raw samples, request URLs, raw stdout payloads beyond parsed summary, and stderr unless manually redacted."
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "digest",
+              "name": "digest",
+              "value": "={{ 'Late/Zernio read-only health digest generated. Review normalized resource rows; no writes were performed.' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "build-digest",
+      "name": "Build reviewer digest",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1080,
+        0
+      ],
+      "notes": "Connect this to the approved internal notification channel only after manual review. Do not auto-post to Paperclip from this draft."
+    }
+  ],
+  "connections": {
+    "Manual Trigger Only": {
+      "main": [
+        [
+          {
+            "node": "Set Runtime Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Runtime Config": {
+      "main": [
+        [
+          {
+            "node": "Probe profiles summary",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Probe accounts summary",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Probe account health summary",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Probe posts summary",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Probe usage stats summary",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Probe users summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Probe profiles summary": {
+      "main": [
+        [
+          {
+            "node": "Normalize safe summaries only",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Probe accounts summary": {
+      "main": [
+        [
+          {
+            "node": "Normalize safe summaries only",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Probe account health summary": {
+      "main": [
+        [
+          {
+            "node": "Normalize safe summaries only",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Probe posts summary": {
+      "main": [
+        [
+          {
+            "node": "Normalize safe summaries only",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Probe usage stats summary": {
+      "main": [
+        [
+          {
+            "node": "Normalize safe summaries only",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Probe users summary": {
+      "main": [
+        [
+          {
+            "node": "Normalize safe summaries only",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize safe summaries only": {
+      "main": [
+        [
+          {
+            "node": "Build reviewer digest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": [
+    {
+      "name": "draft"
+    },
+    {
+      "name": "manual-first"
+    },
+    {
+      "name": "read-only"
+    },
+    {
+      "name": "late"
+    },
+    {
+      "name": "zernio"
+    },
+    {
+      "name": "DIG-66"
+    }
+  ],
+  "pinData": {},
+  "versionId": "draft-dig-66-late-zernio-readonly",
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "notes": "Draft only. Disabled/manual-first. No credentials embedded. No live n8n workflow was created or activated."
+  }
+}
