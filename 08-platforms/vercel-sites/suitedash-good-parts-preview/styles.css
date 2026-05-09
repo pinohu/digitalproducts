@@ -15,6 +15,8 @@
   --radius-lg: 24px;
   --radius-md: 18px;
   --max-width: 1180px;
+  --font-display: "Trebuchet MS", "Gill Sans", "Avenir Next", sans-serif;
+  --font-body: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
 }
 
 * {
@@ -51,7 +53,7 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: var(--font-body);
   color: var(--ink);
   background:
     radial-gradient(circle at top left, rgba(15, 118, 110, 0.14), transparent 32%),
@@ -115,6 +117,7 @@ body::before {
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--accent-strong);
+  font-family: var(--font-display);
 }
 
 .hero h1,
@@ -126,6 +129,7 @@ body::before {
 .cta-card h2 {
   margin: 0;
   line-height: 0.98;
+  font-family: var(--font-display);
 }
 
 .hero h1 {
@@ -163,6 +167,7 @@ body::before {
   min-height: 52px;
   padding: 0 22px;
   border-radius: 999px;
+  font-family: var(--font-display);
   font-size: 0.98rem;
   font-weight: 700;
   text-decoration: none;
@@ -205,6 +210,7 @@ body::before {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
   margin: 32px 0 0;
+  font-family: var(--font-display);
 }
 
 .price-strip div {
@@ -240,7 +246,7 @@ body::before {
   transform: rotate(2deg);
 }
 
-.art-card svg {
+.art-card img {
   display: block;
   width: 100%;
   height: auto;
@@ -322,6 +328,7 @@ body::before {
   border-radius: 999px;
   background: rgba(15, 118, 110, 0.12);
   color: var(--accent-strong);
+  font-family: var(--font-display);
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -364,6 +371,7 @@ body::before {
   border-radius: 16px;
   background: var(--bg-warm);
   color: var(--accent-strong);
+  font-family: var(--font-display);
   font-size: 1.05rem;
   font-weight: 700;
 }

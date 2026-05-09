@@ -24,6 +24,14 @@ This preview is now covered by the repo-level governance stack:
 - `npm run test:lighthouse`
 - `npm run storybook:build`
 
+Latest local quality truth after the 2026-05-09 preview-asset pass:
+
+- Playwright governance checks pass on desktop and mobile.
+- Pa11y passes with 0 accessibility errors.
+- Lighthouse warnings are narrowed to 2 intentional/known items:
+  - `categories:seo` stays below target because the preview remains `noindex` until a real production URL is attached.
+  - `render-blocking-insight` still reports the single local stylesheet as render-blocking.
+
 See:
 
 - `00-foundation/operator-system/governance-stack.md`
